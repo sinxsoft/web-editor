@@ -1,0 +1,99 @@
+<script type="text/javascript" charset="utf-8" src="/static/ueditor1_4_3/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/ueditor1_4_3/ueditor.all.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/ueditor1_4_3/themes/default/css/ueditor.css" />
+
+<div class="row">
+    <div class="span12">
+
+        <div class="widget ">
+            <div class="widget-header">
+                <i class="icon-plus"></i>
+                <h3>添加文章</h3>
+            </div>
+            <!-- /widget-header -->
+
+            <div class="widget-content">
+
+                <div class="alert alert-danger hide" role="alert"></div>
+
+                <form id="add-task" action="controller?action=document" method="post" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="Name">docID</label>
+                            <div class="controls">
+                                <input type="text" name="docID" class="span6" id="docID" value="{{.docID}}" readonly="readonly">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="Name">名称</label>
+                            <div class="controls">
+                                <input type="text" name="nameX" class="span6" value="{{.name}}" id="nameX">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="description">说明</label>
+                            <div class="controls">
+                                <input type="text" name="description" class="span6" value="{{.description}}" id="description" >
+
+                            </div>
+                            <!-- /controls -->
+                        </div>
+                        
+                        <div id="content_none_display" style="display:none">
+                            <input type="text" name="input_content_none_display" class="span6" value="{{.content}}" id="input_content_none_display">
+                        </div>
+
+                        <div id="id_none_display" style="display:none">
+                            <input type="text" name="id" class="span6" value="{{.id}}" id="id">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="description">内容编辑</label>
+                            <div class="controls">
+                                <div id="myEditor"></div>
+                            </div>
+                            <!-- /controls -->
+                        </div>
+                        
+
+                    </fieldset>
+                    <input type="submit" onclick="javascript:SureSubmit(this.form);" value="提交" />
+                </form>
+
+                <script type="text/javascript">
+                    //var ue = UE.getEditor('myEditor');
+                    //初始化
+                    var ue = UE.getEditor('myEditor', {
+                        //toolbars:[['Undo', 'Redo','|','Bold', 'italic', 'underline','strikethrough','removeformat','formatmatch',
+                        //           'forecolor','backcolor','insertorderedlist','insertunorderedlist','|',
+                        //           'fontfamily','fontsize','justifyleft','justifyright','justifycenter','justifyjustify','|',
+                        //          'insertimage','insertvideo','|','preview','searchreplace','FullScreen']],
+                        //关闭字数统计
+                        wordCount: true,
+                        maximumWords: 2000,
+                        autoHeightEnabled: true,
+                        //关闭elementPath
+                        elementPathEnabled: false,
+                        //默认的编辑区域高度
+                        initialFrameHeight: 300
+                        //更多其他参数，请参考ueditor.config.js中的配置项
+                    });
+                    function SureSubmit(objForm) {
+                        objForm.myEditors.value = UE.getEditor('myEditor')
+                            .getContent();
+                        objForm.submit();
+                    }
+                    ue.addListener("ready", function () {
+                        var val = document.getElementById("input_content_none_display").value
+                        ue.setContent(val)
+                    });  
+                  
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
