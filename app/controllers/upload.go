@@ -212,6 +212,8 @@ func (this *UploadController) Controller() {
 			return
 		}
 	} else {
+		//判断是否存在文件，存在就改名
+		fName := ".html.file"
 		edit := this.Ctx.Request.Form["edit"]
 		id := this.Ctx.Request.Form["id"]
 		if edit != nil && edit[0] == "true" && id != nil {
@@ -223,7 +225,7 @@ func (this *UploadController) Controller() {
 			this.Data["name"] = c.Name
 			this.Data["description"] = c.Description
 
-			b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + c.DocId + ".file")
+			b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + c.DocId + fName)
 			if error != nil {
 				this.Data["content"] = error.Error()
 			} else {
