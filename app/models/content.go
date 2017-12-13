@@ -13,6 +13,8 @@ type Content struct {
 	Description string
 	Status      int
 	CreateTime  string
+	UserName    string
+	UserId      int
 }
 
 func (c *Content) TableName() string {

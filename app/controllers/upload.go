@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -30,18 +31,19 @@ type UploadController struct {
 func (this *UploadController) Object() {
 	w := this.Ctx.ResponseWriter
 	this.Ctx.Request.ParseForm()
-	file := this.Ctx.Request.Form["file"]
+	//file := this.Ctx.Request.Form["file"]
+	file := this.Ctx.Input.Param(":splat")
 	//从oss拿到对象
-	b := this.GetOss(file[0])
+	b := this.GetOss(file)
 	w.Write(b)
 }
 
 func (this *UploadController) Document() {
 	w := this.Ctx.ResponseWriter
 	this.Ctx.Request.ParseForm()
-	id := this.Ctx.Request.Form["id"]
+	id := this.Ctx.Input.Param(":splat")
 	//从本地存储拿到html文件
-	b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + id[0] + ".file")
+	b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + id + ".file")
 	if error != nil {
 		w.Write([]byte(error.Error()))
 		return
@@ -76,9 +78,15 @@ func (this *UploadController) Controller() {
 				http.Error(w, err.Error(), 500)
 				return
 			}
+
 			defer file.Close()
+
+			fileExtName := path.Ext(fileHeader.Filename)
+
 			uuid := uuid.NewV4()
-			f, err := os.Create(uuid.String())
+			fileName := uuid.String() + fileExtName
+
+			f, err := os.Create(fileName)
 			//defer f.Close()
 			io.Copy(f, file)
 			f.Close()
@@ -87,12 +95,14 @@ func (this *UploadController) Controller() {
 			//开始上传oss
 			//fileInfo, _ := f.Stat()
 
-			url := this.UploadOss(uuid.String(), uuid.String())
+			url := this.UploadOss(fileName, fileName)
 			//fmt.Fprintf(w, "上传oss文件的大小为: %d ,url:"+url, file.(Sizer).Size())
 			//json := "{\"state\": \"SUCCESS\",\"original\": \"%s\",\"size\": \"%d\",\"title\": \"%s\",\"type\": \"%s\",\"url\": \"%s\"}"
 			json := fmt.Sprintf(RESULT_JSON, fileHeader.Filename, fileHeader.Size, fileHeader.Filename, "", url)
 
 			io.WriteString(w, json)
+
+			os.Remove(fileName)
 
 		} else if "config" == act && "GET" == r.Method {
 			w.Header().Add("Content-Type", "text/json;charset=utf-8")
@@ -117,7 +127,8 @@ func (this *UploadController) Controller() {
 			}
 
 			//判断是否存在文件，存在就改名
-			path := beego.AppConfig.String("document.path") + docID[0] + ".file"
+			fName := ".html.file"
+			path := beego.AppConfig.String("document.path") + docID[0] + fName
 
 			bool, _ := libs.Exists(path)
 			if bool {
@@ -133,7 +144,7 @@ func (this *UploadController) Controller() {
 				}
 			}
 			data := []byte(content[0])
-			fl, err := os.OpenFile(beego.AppConfig.String("document.path")+docID[0]+".file",
+			fl, err := os.OpenFile(beego.AppConfig.String("document.path")+docID[0]+fName,
 				os.O_CREATE|os.O_RDWR, 0644)
 			if err != nil {
 				models.HandleError(err)
@@ -175,7 +186,10 @@ func (this *UploadController) Controller() {
 				c.Description = description[0]
 				c.Name = name[0]
 				c.Type = "1"
-				c.Url = beego.AppConfig.String("document.url") + c.DocId
+				c.Url = beego.AppConfig.String("document.url") + c.DocId + ".html"
+
+				c.UserName = this.Data["loginUserName"].(string)
+				c.UserId = this.Data["loginUserId"].(int)
 				//jsonString := beego.AppConfig.String("config")
 				//json.Unmarshal([]byte(jsonString), a)
 				_, error = models.ContentAdd(c)

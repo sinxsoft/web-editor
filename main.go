@@ -14,8 +14,16 @@ import (
 const VERSION = "1.0.0"
 
 func main() {
+
+	//自定义load自己的配置，配置文件放到外面
+	// error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
+
+	// if error != nil {
+	// 	fmt.Println(error)
+	// 	fmt.Println("系统将采用默认配置！")
+	// }
+
 	models.Init()
-	//jobs.InitJobs()
 
 	// 设置默认404页面
 	beego.ErrorHandler("404", func(rw http.ResponseWriter, r *http.Request) {
@@ -41,15 +49,17 @@ func main() {
 	// beego.AutoRouter(&controllers.TaskController{})
 	beego.Router("/controller", &controllers.UploadController{}, "*:Controller")
 	//beego.Router("/jsp/controller.jsp", &controllers.UploadController{}, "*:Controller")
-	beego.Router("/object", &controllers.UploadController{}, "*:Object")
+	beego.Router("/object/*", &controllers.UploadController{}, "*:Object")
 
-	beego.Router("/doc", &controllers.UploadController{}, "*:Document")
+	beego.Router("/doc/*", &controllers.UploadController{}, "*:Document")
 
 	beego.AutoRouter(&controllers.UploadController{})
 	//add a test page by henrik
 	//beego.AutoRouter(&controllers.CommandController{})
 
 	beego.BConfig.WebConfig.Session.SessionOn = false
+	beego.SetStaticPath("/public", beego.AppConfig.String("public.dir"))
+
 	beego.Run()
 }
 
