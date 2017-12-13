@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/sinxsoft/web-editor/app/controllers"
@@ -20,7 +21,6 @@ func main() {
 
 	if error != nil {
 		fmt.Println(error)
-		fmt.Println("系统将采用默认配置！")
 	}
 
 	models.Init()
@@ -59,6 +59,9 @@ func main() {
 
 	beego.BConfig.WebConfig.Session.SessionOn = false
 	beego.SetStaticPath("/public", beego.AppConfig.String("public.dir"))
+
+	filters := beego.AppConfig.String("action.noauth.url")
+	controllers.Filters = strings.Split(filters, ",")
 
 	beego.Run()
 }

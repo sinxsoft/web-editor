@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -8,6 +9,22 @@ import (
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
 )
+
+var (
+	Filters []string
+)
+
+func IsEscape(url string) bool {
+	if url == "" {
+		return false
+	}
+	for _, v := range Filters {
+		if strings.Index(url, v) == 0 {
+			return true
+		}
+	}
+	return false
+}
 
 const (
 	MSG_OK  = 0
@@ -29,8 +46,12 @@ func (this *BaseController) Prepare() {
 	controllerName, actionName := this.GetControllerAndAction()
 	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
 	this.actionName = strings.ToLower(actionName)
-	this.auth()
 
+	url := this.Ctx.Request.URL
+	fmt.Println(url)
+	if !IsEscape(url.Path) {
+		this.auth()
+	}
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.Data["siteName"] = beego.AppConfig.String("site.name")
 	this.Data["curRoute"] = this.controllerName + "." + this.actionName
