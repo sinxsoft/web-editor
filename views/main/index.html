@@ -27,12 +27,14 @@
 				<thead>
 				<tr>
 					<th width="20"><input type="checkbox" name="chkall" value="1"></td>
-					<th width="40">ID</th>
-					<th>名称</th>
-					<th>描述</th>
-					<th>地址</th>
+					<th width="30">ID</th>
+					<th width="80">名称</th>
+					<th width="100" >描述</th>
+					<th width="120" >地址</th>
 					<th class="span2">创建时间</th>
-					<th class="span5">操作</th>
+					<th class="span2">创建人</th>
+					<th class="span2">状态</th>
+					<th width="100" >操作</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -45,20 +47,22 @@
 						<td>{{$v.Description}}</td>
 						<td>{{$v.Url}}</td>
 						<td>{{$v.CreateTime}}</td>
+						<td>{{$v.UserName}}</td>
 						<td>
-							{{if eq $v.Status 0}}
-							<a class="btn btn-danger" href=" ">
-								<span class="icon-play-circle icon-white"></span> XX
+							 {{if eq $v.Status 0}}
+							<a class="btn btn-success" href=" ">
+								<span class="icon-play-circle icon-white"></span> 已发布
 							</a>
 							{{else}}
-							<a class="btn btn-success" href=" ">
-								<span class="icon-ban-circle icon-white"></span> ZZ
+							<a class="btn btn-danger" href=" ">
+								<span class="icon-ban-circle icon-white"></span> 已作废
 							</a>
 							{{end}}
+						</td>
+						<td>
 							<a class="btn btn-info" href="controller?edit=true&id={{$v.Id}}">
 								<span class="icon-pencil icon-white"></span> 编辑
-							</a>
-										
+							</a>		
 						</td>
 					</tr>
 				{{end}}
