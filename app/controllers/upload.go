@@ -239,8 +239,8 @@ func (this *UploadController) Controller() {
 			this.Data["name"] = ""
 			this.Data["description"] = ""
 		}
-
-		this.TplName = "main/add.html"
+		this.Data["pageTitle"] = "添加文章"
+		this.display("main/add")
 	}
 }
 
