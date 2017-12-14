@@ -53,13 +53,13 @@ func (this *BaseController) Prepare() {
 		this.auth()
 	}
 
-	fmt.Println("\r\n")
+	// fmt.Println("\r\n")
 
-	fmt.Println(this.Ctx.Request)
+	// fmt.Println(this.Ctx.Request)
 
-	fmt.Println("对方IP：" + this.Ctx.Request.RemoteAddr)
+	// fmt.Println("对方IP：" + this.Ctx.Request.RemoteAddr)
 
-	fmt.Println("\r\n")
+	// fmt.Println("\r\n")
 
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.Data["siteName"] = beego.AppConfig.String("site.name")
