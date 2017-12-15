@@ -58,6 +58,7 @@ func (this *BaseController) Prepare() {
 	fmt.Println("\r\n")
 
 	if !IsEscape(url.Path) {
+		fmt.Println("1")
 		this.auth()
 	}
 
@@ -68,6 +69,7 @@ func (this *BaseController) Prepare() {
 	this.Data["curAction"] = this.actionName
 	this.Data["loginUserId"] = this.userId
 	this.Data["loginUserName"] = this.userName
+	fmt.Println("5")
 }
 
 //登录状态验证
@@ -77,17 +79,20 @@ func (this *BaseController) auth() {
 		idstr, password := arr[0], arr[1]
 		userId, _ := strconv.Atoi(idstr)
 		if userId > 0 {
+			fmt.Println("2")
 			user, err := models.UserGetById(userId)
 			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
 				this.userId = user.Id
 				this.userName = user.UserName
 				this.user = user
+				fmt.Println("3")
 			}
 		}
 	}
 
 	if this.userId == 0 && (this.controllerName != "main" ||
 		(this.controllerName == "main" && this.actionName != "logout" && this.actionName != "login")) {
+		fmt.Println("4")
 		this.redirect(beego.URLFor("MainController.Login"))
 	}
 }

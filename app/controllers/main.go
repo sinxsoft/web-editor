@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -77,6 +78,7 @@ func (this *MainController) Login() {
 		remember := this.GetString("remember")
 		if username != "" && password != "" {
 			user, err := models.UserGetByName(username)
+			fmt.Println("11")
 			errorMsg := ""
 			if err != nil || user.Password != libs.Md5([]byte(password+user.Salt)) {
 				errorMsg = "帐号或密码错误"
@@ -86,15 +88,15 @@ func (this *MainController) Login() {
 				user.LastIp = this.getClientIp()
 				user.LastLogin = time.Now().Unix()
 				models.UserUpdate(user)
-
+				fmt.Println("33")
 				authkey := libs.Md5([]byte(this.getClientIp() + "|" + user.Password + user.Salt))
 				if remember == "yes" {
 					this.Ctx.SetCookie("auth", strconv.Itoa(user.Id)+"|"+authkey, 7*86400)
 				} else {
 					this.Ctx.SetCookie("auth", strconv.Itoa(user.Id)+"|"+authkey)
 				}
-
-				this.redirect(beego.URLFor("TaskController.List"))
+				fmt.Println("44")
+				this.redirect(beego.URLFor("MainController.Index"))
 			}
 			flash.Error(errorMsg)
 			flash.Store(&this.Controller)
