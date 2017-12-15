@@ -85,11 +85,11 @@ func (this *BaseController) auth() {
 		if !b {
 			this.redirect(beego.URLFor("MainController.Login"))
 		} else {
-			if username != t.UserName {
+			if username != t.U.UserName || this.getClientIp() != t.IP {
 				this.redirect(beego.URLFor("MainController.Login"))
 			}
 		}
-		user := t
+		user := t.U
 		this.userId = user.Id
 		this.userName = user.UserName
 		this.user = &user

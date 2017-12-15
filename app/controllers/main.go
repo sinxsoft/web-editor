@@ -134,19 +134,24 @@ func (this *MainController) Login() {
 				user.LastLogin = time.Now().Unix()
 				models.UserUpdate(user)
 				fmt.Println("33")
-				token := uuid.NewV1().String()
+				token := "webeditor-" + uuid.NewV1().String()
 
+				userExt := models.GenUserExt()
+				userExt.U = *user
+				userExt.IP = this.getClientIp()
+
+				second := 7 * 86400
 				if remember == "yes" {
-					this.Ctx.SetCookie("token", token, 7*86400)
-					this.Ctx.SetCookie("username", username, 7*86400)
+					this.Ctx.SetCookie("token", token, second) //秒
+					this.Ctx.SetCookie("username", username, second)
 				} else {
 					this.Ctx.SetCookie("token", token)
 					this.Ctx.SetCookie("username", username)
 				}
 
-				libs.SaveToken(token, *user)
+				libs.SaveToken(token, userExt, second) //秒
 
-				fmt.Println("44")
+				fmt.Println("444444")
 				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))
 				this.redirect(beego.URLFor("MainController.Index"))
 			}
