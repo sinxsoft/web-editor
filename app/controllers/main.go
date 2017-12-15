@@ -96,10 +96,12 @@ func (this *MainController) Login() {
 					this.Ctx.SetCookie("auth", strconv.Itoa(user.Id)+"|"+authkey)
 				}
 				fmt.Println("44")
+				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))
 				this.redirect(beego.URLFor("MainController.Index"))
 			}
 			flash.Error(errorMsg)
 			flash.Store(&this.Controller)
+			fmt.Println("login:fail:" + beego.URLFor("MainController.Index"))
 			this.redirect(beego.URLFor("MainController.Login"))
 		}
 	}
