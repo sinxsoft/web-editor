@@ -142,14 +142,15 @@ func (this *MainController) Login() {
 
 				second := 7 * 86400
 				if remember == "yes" {
+					userExt.RememberMe = true
 					this.Ctx.SetCookie("token", token, second) //秒
 					this.Ctx.SetCookie("username", username, second)
+					libs.SaveToken(token, userExt, second) //秒7天过期
 				} else {
 					this.Ctx.SetCookie("token", token)
 					this.Ctx.SetCookie("username", username)
+					libs.SaveToken(token, userExt, second/7) //秒,一天过期
 				}
-
-				libs.SaveToken(token, userExt, second) //秒
 
 				//fmt.Println("444444")
 				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))

@@ -52,6 +52,14 @@ func GetToken(token string) (models.UserExt, bool) {
 	error := json.Unmarshal([]byte(sc), j)
 
 	if error == nil {
+		//如果是rememberMe为true，则延时7天
+		//纳秒
+		nsecond := 86400 * time.Second
+		if j.RememberMe {
+			//则延时7天
+			nsecond = 7 * nsecond
+		}
+		client.Expire(token, nsecond)
 		return *j, true
 	} else {
 		fmt.Println(error)
