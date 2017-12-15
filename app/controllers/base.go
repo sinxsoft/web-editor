@@ -179,6 +179,17 @@ func (this *BaseController) ajaxMsg(msg interface{}, msgno int) {
 
 //获取用户IP地址
 func (this *BaseController) getClientIp() string {
+	var realIP string
+	realIP = this.Ctx.Request.Header.Get("X-Real-Forwarded-For")
+	if realIP != "" {
+		fmt.Println(realIP)
+		return realIP
+	}
+	realIP = this.Ctx.Request.Header.Get("X-Forwarded-For")
+	if realIP != "" {
+		fmt.Println(realIP)
+		return realIP
+	}
 	s := strings.Split(this.Ctx.Request.RemoteAddr, ":")
 	return s[0]
 }
