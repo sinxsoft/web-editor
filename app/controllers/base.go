@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -73,29 +72,55 @@ func (this *BaseController) Prepare() {
 }
 
 //登录状态验证
+
 func (this *BaseController) auth() {
-	arr := strings.Split(this.Ctx.GetCookie("auth"), "|")
-	if len(arr) == 2 {
-		idstr, password := arr[0], arr[1]
-		userId, _ := strconv.Atoi(idstr)
-		if userId > 0 {
-			fmt.Println("2")
-			user, err := models.UserGetById(userId)
-			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
-				this.userId = user.Id
-				this.userName = user.UserName
-				this.user = user
-				fmt.Println("3")
+
+	username := this.Ctx.GetCookie("username")
+	token := this.Ctx.GetCookie("token")
+
+	if token == "" || username == "" {
+		this.redirect(beego.URLFor("MainController.Login"))
+	} else {
+		t, b := libs.GetToken(token)
+		if !b {
+			this.redirect(beego.URLFor("MainController.Login"))
+		} else {
+			if username != t.UserName {
+				this.redirect(beego.URLFor("MainController.Login"))
 			}
 		}
+		user := t
+		this.userId = user.Id
+		this.userName = user.UserName
+		this.user = &user
 	}
 
-	if this.userId == 0 && (this.controllerName != "main" ||
-		(this.controllerName == "main" && this.actionName != "logout" && this.actionName != "login")) {
-		fmt.Println("4")
-		this.redirect(beego.URLFor("MainController.Login"))
-	}
 }
+
+// func (this *BaseController) auth() {
+// 	arr := strings.Split(this.Ctx.GetCookie("auth"), "|")
+
+// 	if len(arr) == 2 {
+// 		idstr, password := arr[0], arr[1]
+// 		userId, _ := strconv.Atoi(idstr)
+// 		if userId > 0 {
+// 			fmt.Println("2")
+// 			user, err := models.UserGetById(userId)
+// 			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
+// 				this.userId = user.Id
+// 				this.userName = user.UserName
+// 				this.user = user
+// 				fmt.Println("3")
+// 			}
+// 		}
+// 	}
+
+// 	if this.userId == 0 && (this.controllerName != "main" ||
+// 		(this.controllerName == "main" && this.actionName != "logout" && this.actionName != "login")) {
+// 		fmt.Println("4")
+// 		this.redirect(beego.URLFor("MainController.Login"))
+// 	}
+// }
 
 //渲染模版
 func (this *BaseController) display(tpl ...string) {
