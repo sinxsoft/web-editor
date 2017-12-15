@@ -43,7 +43,7 @@ func SaveToken(token string, um models.UserExt, second int) error {
 func GetToken(token string) (models.UserExt, bool) {
 	client := CreateClient()
 	sc, e := client.Get(token).Result()
-	var j *models.UserExt = new(models.UserExt)
+	j := new(models.UserExt)
 	if e != nil {
 		fmt.Println(e)
 		return *new(models.UserExt), false
@@ -61,9 +61,8 @@ func GetToken(token string) (models.UserExt, bool) {
 		}
 		client.Expire(token, nsecond)
 		return *j, true
-	} else {
-		fmt.Println(error)
-		return *new(models.UserExt), false
 	}
+	fmt.Println(error)
+	return *new(models.UserExt), false
 
 }

@@ -141,7 +141,7 @@ func (this *MainController) Login() {
 				userExt.IP = this.getClientIp()
 
 				second := 7 * 86400
-				if remember == "yes" {
+				if remember == "yes" || remember == "1" {
 					userExt.RememberMe = true
 					this.Ctx.SetCookie("token", token, second) //秒
 					this.Ctx.SetCookie("username", username, second)
