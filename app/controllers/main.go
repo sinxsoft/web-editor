@@ -151,7 +151,7 @@ func (this *MainController) Login() {
 
 				libs.SaveToken(token, userExt, second) //秒
 
-				fmt.Println("444444")
+				//fmt.Println("444444")
 				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))
 				this.redirect(beego.URLFor("MainController.Index"))
 			}

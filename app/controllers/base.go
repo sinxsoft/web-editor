@@ -48,16 +48,16 @@ func (this *BaseController) Prepare() {
 
 	url := this.Ctx.Request.URL
 
-	fmt.Println("\r\n")
+	// fmt.Println("\r\n")
 
-	fmt.Println(this.Ctx.Request)
+	// fmt.Println(this.Ctx.Request)
 
-	fmt.Println("对方IP：" + this.Ctx.Request.RemoteAddr)
+	// fmt.Println("对方IP：" + this.Ctx.Request.RemoteAddr)
 
-	fmt.Println("\r\n")
+	// fmt.Println("\r\n")
 
 	if !IsEscape(url.Path) {
-		fmt.Println("1")
+		//fmt.Println("1")
 		this.auth()
 	}
 
@@ -182,12 +182,12 @@ func (this *BaseController) getClientIp() string {
 	var realIP string
 	realIP = this.Ctx.Request.Header.Get("X-Real-Forwarded-For")
 	if realIP != "" {
-		fmt.Println(realIP)
+		fmt.Println("X-Real-Forwarded-For" + realIP)
 		return realIP
 	}
 	realIP = this.Ctx.Request.Header.Get("X-Forwarded-For")
 	if realIP != "" {
-		fmt.Println(realIP)
+		fmt.Println("X-Forwarded-For" + realIP)
 		return realIP
 	}
 	s := strings.Split(this.Ctx.Request.RemoteAddr, ":")
