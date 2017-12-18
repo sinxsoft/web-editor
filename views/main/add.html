@@ -61,6 +61,11 @@
                             <label class="control-label" for="description"> </label>
                             <div class="controls">
                                 <input type="submit" onclick="javascript:SureSubmit(this.form);" value="提 交" />
+
+                                {{if eq .edit "true"}}
+                                        <input type="button" onclick="javascript:del('{{.id}}');" value="删除该文档" />
+                                {{end}}
+
                             </div>
                             <!-- /controls -->
                         </div>
@@ -94,6 +99,18 @@
                         var val = document.getElementById("input_content_none_display").value
                         ue.setContent(val)
                     });  
+
+                    function del(id) {
+                        if(confirm("该功能建议只用来做任务测试，确定要立即执行该任务吗？")){
+                        	$.post('{{urlfor "UploadController.Del"}}', {ID:id}, function (out) {
+                                if (out.state == 'true') {
+                                    window.location.href = '/';
+                                }else{
+                                    alert(out.msg)
+                                }
+                            }, "json");
+                        }
+                    };
                   
                 </script>
 

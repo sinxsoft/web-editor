@@ -22,6 +22,8 @@ func (c *Content) TableName() string {
 }
 
 func (c *Content) Update(fields ...string) error {
+
+	//error := c.Update("Status")
 	if _, err := orm.NewOrm().Update(c, fields...); err != nil {
 		return err
 	}
@@ -71,7 +73,18 @@ func ContentGetById(id int) (*Content, error) {
 func ContentGetByName(contentName string) (*Content, error) {
 	c := new(Content)
 
-	err := orm.NewOrm().QueryTable(TableName("content")).Filter("content_name", contentName).One(c)
+	err := orm.NewOrm().QueryTable(TableName("content")).Filter("Name", contentName).One(c)
+
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
+func ContentGetByDocID(docID string) (*Content, error) {
+	c := new(Content)
+
+	err := orm.NewOrm().QueryTable(TableName("content")).Filter("DocID", docID).One(c)
 
 	if err != nil {
 		return nil, err
@@ -81,7 +94,7 @@ func ContentGetByName(contentName string) (*Content, error) {
 
 func ContentUpdate(content *Content, fields ...string) error {
 
-	_, err := orm.NewOrm().Update(content, fields...)
+	err := content.Update(fields...)
 
 	return err
 }

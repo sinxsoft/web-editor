@@ -42,6 +42,19 @@ func (this *UploadController) Document() {
 	w := this.Ctx.ResponseWriter
 	this.Ctx.Request.ParseForm()
 	id := this.Ctx.Input.Param(":splat")
+
+	c, er := models.ContentGetByDocID(strings.Replace(id, ".html", "", -1))
+
+	if er != nil {
+		w.Write([]byte(er.Error()))
+		return
+	}
+
+	if c.Status == 1 {
+		w.Write([]byte("该文档已经删除或者不存在！"))
+		return
+	}
+
 	//从本地存储拿到html文件
 	b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + id + ".file")
 	if error != nil {
@@ -224,6 +237,7 @@ func (this *UploadController) Controller() {
 			this.Data["docID"] = c.DocId
 			this.Data["name"] = c.Name
 			this.Data["description"] = c.Description
+			this.Data["edit"] = "true"
 
 			b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + c.DocId + fName)
 			if error != nil {
@@ -238,6 +252,7 @@ func (this *UploadController) Controller() {
 			this.Data["content"] = ""
 			this.Data["name"] = ""
 			this.Data["description"] = ""
+			this.Data["edit"] = "false"
 		}
 		this.Data["pageTitle"] = "添加文章"
 		this.display("main/add")
@@ -293,4 +308,56 @@ func (this *UploadController) UploadOss(objectKey string, localFile string) stri
 	fmt.Println(err)
 
 	return getURL + objectKey
+}
+
+type ID struct {
+	ID string
+}
+
+func (this *UploadController) Del() {
+
+	w := this.Ctx.ResponseWriter
+	w.Header().Add("Content-Type", "text/json;charset=utf-8")
+	w.WriteHeader(200)
+
+	jsonString := fmt.Sprintf(DOC_RESULT_JSON, "true", "成功！")
+	this.Ctx.Input.AcceptsJSON()
+	id := this.GetString("ID")
+	intID, _ := strconv.Atoi(id)
+	model, errorModel := models.ContentGetById(intID)
+
+	if errorModel != nil {
+		jsonString = fmt.Sprintf(DOC_RESULT_JSON, "fail", errorModel)
+		io.WriteString(w, jsonString)
+		return
+	}
+	if model.Status == 1 {
+		jsonString = fmt.Sprintf(DOC_RESULT_JSON, "fail", "不存在文档！或已经不可用！")
+		io.WriteString(w, jsonString)
+		return
+	}
+
+	path := beego.AppConfig.String("document.path") + model.DocId + ".html.file"
+
+	bool, _ := libs.Exists(path)
+	if bool {
+		e := os.Rename(path, path+".deleted")
+		if e != nil {
+			models.HandleError(e)
+			jsonString = fmt.Sprintf(DOC_RESULT_JSON, "fail", e)
+		} else {
+			jsonString = fmt.Sprintf(DOC_RESULT_JSON, "true", "操作成功！")
+
+			//model, _ := models.ContentGetById(intID)
+			model.Status = 1
+			error := models.ContentUpdate(model, "Status")
+			if error != nil {
+				os.Rename(path+".deleted", path)
+				jsonString = fmt.Sprintf(DOC_RESULT_JSON, "false", error)
+			}
+		}
+	}
+	//jsonString := beego.AppConfig.String("config")
+	//json.Unmarshal([]byte(jsonString), a)
+	io.WriteString(w, jsonString)
 }
