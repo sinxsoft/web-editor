@@ -60,9 +60,15 @@
 							{{end}}
 						</td>
 						<td>
-							<a class="btn btn-info" href="controller?edit=true&id={{$v.Id}}">
-								<span class="icon-pencil icon-white"></span> 编辑
-							</a>		
+							{{if eq $v.Status 0}}
+								<a class="btn btn-info" href="controller?edit=true&id={{$v.Id}}">
+									<span class="icon-pencil icon-white"></span> 编辑
+								</a>
+							{{else}}
+								<a class="btn btn-info" onclick="javascript:cancelDel('{{$v.Id}}');">
+									<span class="icon-pencil icon-white"></span> 恢复
+								</a>
+							{{end}}	
 						</td>
 					</tr>
 				{{end}}
@@ -76,23 +82,12 @@
 	</div> <!-- /row -->
 	
 	<script>
-	$(function() {
-		$('[data-toggle="tooltip"]').tooltip()
-		$("input[name='chkall']").click(function () {
-			$("input[name='ids']").attr("checked", $(this).attr("checked") == "checked");
-		});
-		$("select[name='groupid']").change(function () {
-			$("form[name='s']").submit();
-		});
-		$(".btn-run").click(function () {
-			return confirm("该功能建议只用来做任务测试，确定要立即执行该任务吗？");
-		});
-	});
+	
 	
 	function batch(action) {
 		$(".alert").hide();
 		if ($("input[name='ids']:checked").size() < 1) {
-			$(".alert").text("请选择要操作的任务");
+			$(".alert").text("请选择要操作的文档");
 			$(".alert").show();
 		} else {
 			var url = "{{urlfor "UploadController.Controller"}}";
@@ -107,4 +102,18 @@
 		}
 		return false;
 	}
+
+	function cancelDel(id) {
+		  if (confirm("确定要恢复该文档？")) {
+				var url = "{{urlfor "UploadController.CancelDel"}}";
+				$.post(url , {ID:id}, function (out) {
+					if (out.state == 'true') {
+						alert(out.msg)
+						window.location.reload();
+					} else {
+						alert(out.msg)
+					}
+				}, "json");
+		  }
+		}
 	</script>
