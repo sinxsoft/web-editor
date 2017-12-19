@@ -4,13 +4,11 @@
 
 <div class="row">
     <div class="span12">
-
         <div class="widget ">
             <div class="widget-header">
                 <i class="icon-plus"></i>
                 <h3>添加文章</h3>
             </div>
-            <!-- /widget-header -->
 
             <div class="widget-content">
 
@@ -37,7 +35,6 @@
                             <label class="control-label" for="description">说明</label>
                             <div class="controls">
                                 <input type="text" name="description" class="span6" value="{{.description}}" id="description" >
-
                             </div>
                             <!-- /controls -->
                         </div>
@@ -61,11 +58,9 @@
                             <label class="control-label" for="description"> </label>
                             <div class="controls">
                                 <input type="submit" onclick="javascript:SureSubmit(this.form);" value="提 交" />
-
                                 {{if eq .edit "true"}}
                                         <input type="button" onclick="javascript:del('{{.id}}');" value="删除该文档" />
                                 {{end}}
-
                             </div>
                             <!-- /controls -->
                         </div>
@@ -82,7 +77,7 @@
                         //          'insertimage','insertvideo','|','preview','searchreplace','FullScreen']],
                         //关闭字数统计
                         wordCount: true,
-                        maximumWords: 2000,
+                        maximumWords: 200000,
                         autoHeightEnabled: true,
                         //关闭elementPath
                         elementPathEnabled: false,
@@ -99,9 +94,8 @@
                         var val = document.getElementById("input_content_none_display").value
                         ue.setContent(val)
                     });  
-
                     function del(id) {
-                        if(confirm("该功能建议只用来做任务测试，确定要立即执行该任务吗？")){
+                        if(confirm("确定要删除该文档？")){
                         	$.post('{{urlfor "UploadController.Del"}}', {ID:id}, function (out) {
                                 if (out.state == 'true') {
                                     window.location.href = '/';
@@ -110,10 +104,8 @@
                                 }
                             }, "json");
                         }
-                    };
-                  
+                    };                 
                 </script>
-
             </div>
         </div>
     </div>
