@@ -61,7 +61,8 @@ func (this *UploadController) Document() {
 		w.Write([]byte(error.Error()))
 		return
 	}
-	w.Write(b)
+	this.Ctx.WriteString(string(b))
+	//w.Write(b)
 
 }
 
@@ -131,6 +132,9 @@ func (this *UploadController) Controller() {
 			docID := this.Ctx.Request.Form["docID"]
 			//content := this.Ctx.Request.Form["myEditor"]
 			content := this.Ctx.Request.Form["input_content_none_display"]
+
+			fmt.Println(content[0])
+
 			description := this.Ctx.Request.Form["description"]
 			id := this.Ctx.Request.Form["id"]
 			if content == nil {

@@ -82,8 +82,9 @@
                         //关闭elementPath
                         elementPathEnabled: false,
                         //默认的编辑区域高度
-                        initialFrameHeight: 300
+                        initialFrameHeight: 300,
                         //更多其他参数，请参考ueditor.config.js中的配置项
+                        initialContent: document.getElementById("input_content_none_display").value
                     });
                     function SureSubmit(objForm) {
                         document.getElementById("input_content_none_display").value = UE.getEditor('myEditor')
@@ -91,8 +92,8 @@
                         objForm.submit();
                     }
                     ue.addListener("ready", function () {
-                        var val = document.getElementById("input_content_none_display").value
-                        ue.setContent(val)
+                        // var val = document.getElementById("input_content_none_display").value
+                        // ue.setContent(val)
                     });  
                     function del(id) {
                         if(confirm("确定要删除该文档？")){
