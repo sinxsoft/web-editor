@@ -86,7 +86,7 @@
                         //更多其他参数，请参考ueditor.config.js中的配置项
                     });
                     function SureSubmit(objForm) {
-                        objForm.myEditors.value = UE.getEditor('myEditor')
+                        document.getElementById("input_content_none_display").value = UE.getEditor('myEditor')
                             .getContent();
                         objForm.submit();
                     }

@@ -130,7 +130,7 @@ func (this *UploadController) Controller() {
 			name := this.Ctx.Request.Form["nameX"]
 			docID := this.Ctx.Request.Form["docID"]
 			//content := this.Ctx.Request.Form["myEditor"]
-			content := this.Ctx.Request.Form["editorValue"]
+			content := this.Ctx.Request.Form["input_content_none_display"]
 			description := this.Ctx.Request.Form["description"]
 			id := this.Ctx.Request.Form["id"]
 			if content == nil {

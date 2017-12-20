@@ -59,9 +59,14 @@ func main() {
 
 	beego.BConfig.WebConfig.Session.SessionOn = false
 	beego.SetStaticPath("/public", beego.AppConfig.String("public.dir"))
-	viewsURL := beego.AppConfig.String("views.dir")
-	if viewsURL != "" {
-		beego.SetViewsPath(viewsURL)
+	viewsDir := beego.AppConfig.String("views.dir")
+	if viewsDir != "" {
+		beego.SetViewsPath(viewsDir)
+	}
+
+	staticDir := beego.AppConfig.String("static.dir")
+	if staticDir != "" {
+		beego.SetStaticPath("static", staticDir)
 	}
 
 	filters := beego.AppConfig.String("action.noauth.url")
