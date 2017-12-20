@@ -39,21 +39,31 @@
                             <!-- /controls -->
                         </div>
                         
-                        <div id="content_none_display" style="display:none">
+                        <!-- <div id="content_none_display" style="display:none">
                             <input type="text" name="input_content_none_display" class="span6" value="{{.content}}" id="input_content_none_display">
-                        </div>
+                        </div> -->
 
                         <div id="id_none_display" style="display:none">
                             <input type="text" name="id" class="span6" value="{{.id}}" id="id">
                         </div>
 
+                   
+
                         <div class="control-group">
-                            <label class="control-label" for="description">内容编辑</label>
+                            <label class="control-label" for="Name">内容编辑</label>
+                            <div class="controls">
+                            <textarea  style="width:900px;overflow-y:visible" name="contentEditor" id ="contentEditor" rows="30" cols="100">{{.content}}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="description">如需要上图|编辑页面</label>
                             <div class="controls">
                                 <div id="myEditor"></div>
                             </div>
                             <!-- /controls -->
                         </div>
+
                         <div class="control-group">
                             <label class="control-label" for="description"> </label>
                             <div class="controls">
@@ -64,27 +74,23 @@
                             </div>
                             <!-- /controls -->
                         </div>
+
+                        
                     </fieldset>
                 </form>
 
                 <script type="text/javascript">
-                    //var ue = UE.getEditor('myEditor');
                     //初始化
                     var ue = UE.getEditor('myEditor', {
-                        //toolbars:[['Undo', 'Redo','|','Bold', 'italic', 'underline','strikethrough','removeformat','formatmatch',
-                        //           'forecolor','backcolor','insertorderedlist','insertunorderedlist','|',
-                        //           'fontfamily','fontsize','justifyleft','justifyright','justifycenter','justifyjustify','|',
-                        //          'insertimage','insertvideo','|','preview','searchreplace','FullScreen']],
-                        //关闭字数统计
+    
                         wordCount: true,
-                        maximumWords: 200000,
-                        autoHeightEnabled: true,
+                        maximumWords: 200,
+                        autoHeightEnabled: false,
                         //关闭elementPath
                         elementPathEnabled: false,
                         //默认的编辑区域高度
-                        initialFrameHeight: 300,
+                        initialFrameHeight: 30
                         //更多其他参数，请参考ueditor.config.js中的配置项
-                        initialContent: document.getElementById("input_content_none_display").value
                     });
                     function SureSubmit(objForm) {
                         document.getElementById("input_content_none_display").value = UE.getEditor('myEditor')
