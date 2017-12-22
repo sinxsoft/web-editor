@@ -52,6 +52,7 @@ func main() {
 	beego.Router("/object/*", &controllers.UploadController{}, "*:Object")
 
 	beego.Router("/doc/*", &controllers.UploadController{}, "*:Document")
+	beego.Router("/doclist", &controllers.UploadController{}, "*:DocList")
 
 	beego.AutoRouter(&controllers.UploadController{})
 	//add a test page by henrik

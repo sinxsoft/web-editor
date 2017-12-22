@@ -63,6 +63,13 @@
 						<span>系统概况</span>
 					</a>	    				
 				</li>
+
+				<li {{if eq .curRoute "doclist"}}class="active" {{end}}>
+					<a href="/doclist">
+						<i class="icon-list-alt"></i>
+						<span>文档清单</span>
+					</a>
+				</li>
 		
 				<li {{if eq .curController "help"}}class="active"{{end}}>					
 					<a href="/help">

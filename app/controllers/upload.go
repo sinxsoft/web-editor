@@ -38,6 +38,17 @@ func (this *UploadController) Object() {
 	w.Write(b)
 }
 
+func (this *UploadController) DocList() {
+	this.Data["pageTitle"] = "文档清单"
+
+	// 已经新建好的好的页面
+	entries, _ := models.DocumentListGetAllList()
+
+	this.Data["entries"] = entries
+
+	this.display("main/documentlist")
+}
+
 func (this *UploadController) Document() {
 	w := this.Ctx.ResponseWriter
 	this.Ctx.Request.ParseForm()
@@ -109,7 +120,7 @@ func (this *UploadController) Controller() {
 			//开始上传oss
 			//fileInfo, _ := f.Stat()
 
-			url := this.UploadOss(fileName, fileName)
+			url := this.UploadOss(fileName, fileName, fileHeader.Filename)
 			//fmt.Fprintf(w, "上传oss文件的大小为: %d ,url:"+url, file.(Sizer).Size())
 			//json := "{\"state\": \"SUCCESS\",\"original\": \"%s\",\"size\": \"%d\",\"title\": \"%s\",\"type\": \"%s\",\"url\": \"%s\"}"
 			json := fmt.Sprintf(RESULT_JSON, fileHeader.Filename, fileHeader.Size, fileHeader.Filename, "", url)
@@ -289,7 +300,7 @@ func (this *UploadController) GetOss(objectKey string) []byte {
 	return data
 }
 
-func (this *UploadController) UploadOss(objectKey string, localFile string) string {
+func (this *UploadController) UploadOss(objectKey string, localFile string, originalFileName string) string {
 	accessKey := beego.AppConfig.String("oss.key")
 	accessKeySecret := beego.AppConfig.String("oss.secret")
 	endPoint := beego.AppConfig.String("oss.clientEndPoint")
@@ -310,9 +321,17 @@ func (this *UploadController) UploadOss(objectKey string, localFile string) stri
 
 	getURL := beego.AppConfig.String("get.url")
 
-	fmt.Println(client)
+	//fmt.Println(client)
 
-	fmt.Println(err)
+	//fmt.Println(err)
+	dl := new(models.DocumentList)
+	dl.DocId = objectKey
+	dl.CreateTime = time.Now().Format("2006/01/02 15:04:05")
+	dl.OssAllUrl = getURL + objectKey
+	dl.UserName = this.Data["loginUserName"].(string)
+	dl.UserId = this.Data["loginUserId"].(int)
+	dl.OriginalFileName = libs.SubString(originalFileName, 0, 100)
+	models.DocumentListAdd(dl)
 
 	return getURL + objectKey
 }

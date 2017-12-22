@@ -1,0 +1,93 @@
+<div class="row">
+	<div class="span12">      		
+				   
+		<div class="widget ">
+			<div class="widget-header">
+				<i class="icon-th-list"></i>
+				 <h3>文档列表</h3>
+			</div> <!-- /widget-header -->
+	
+			<div class="widget-content">
+			
+			<div class="alert hide" role="alert"></div>
+			
+			<div class="btn-toolbar">
+
+			</div>
+	
+			<form id="form-list" method="post" action="">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+				<tr>
+					<th width="20"><input type="checkbox" name="chkall" value="1"></td>
+					<th width="30">ID</th>
+					<th width="300">原文件名</th>
+					<th width="300">文件名</th>
+					<th width="120" >地址</th>
+					<th class="span2">创建时间</th>
+					<th class="span2">创建人</th>
+					<th width="80" >操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{range $k, $v := .entries}}
+					<tr>
+						<td><input type="checkbox" name="ids" value="{{$v.Id}}" /></td>
+						<td class="center">{{$v.Id}}</td>
+						<td>{{$v.OriginalFileName}}</td>
+						<td>{{$v.DocId}}</td>
+						<td><a href='{{$v.OssAllUrl}}' target="_blank">点击链接</a></td>
+						<td>{{$v.CreateTime}}</td>
+						<td>{{$v.UserName}}</td>
+						<td>
+							<a class="btn btn-info" href="controller?deleteDoc=true&id={{$v.Id}}">
+								<span class="icon-pencil icon-white"></span> 删除
+							</a>
+						</td>
+					</tr>
+				{{end}}
+				</tbody>
+			</table>
+			</form>
+			
+			</div>
+		</div>
+	</div>
+	</div> <!-- /row -->
+	
+	<script>
+	
+	
+	function batch(action) {
+		$(".alert").hide();
+		if ($("input[name='ids']:checked").size() < 1) {
+			$(".alert").text("请选择要操作的文档");
+			$(".alert").show();
+		} else {
+			var url = "{{urlfor "UploadController.Controller"}}";
+			$.post(url + "?action=" + action, $("#form-list").serialize(), function(out) {
+				if (out.status != 0) {
+					$(".alert").text(out.msg);
+					$(".alert").show();
+				} else {
+					window.location.reload();
+				}
+			}, "json");
+		}
+		return false;
+	}
+
+	function cancelDel(id) {
+		  if (confirm("确定要恢复该文档？")) {
+				var url = "{{urlfor "UploadController.CancelDel"}}";
+				$.post(url , {ID:id}, function (out) {
+					if (out.state == 'true') {
+						alert(out.msg)
+						window.location.reload();
+					} else {
+						alert(out.msg)
+					}
+				}, "json");
+		  }
+		}
+	</script>

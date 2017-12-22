@@ -26,6 +26,7 @@ func Init() {
 	orm.RegisterDataBase("default", "mysql", dsn)
 	orm.RegisterModel(new(User))
 	orm.RegisterModel(new(Content))
+	orm.RegisterModel(new(DocumentList))
 
 	// c := new(Command)
 	// c.CommandId = 111
