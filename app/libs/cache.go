@@ -9,22 +9,8 @@ import (
 )
 
 var (
-//MAP map[string]models.User = make(map[string]models.User)
-//mapUserExts map[string]models.UserExt = make(map[string]models.UserExt)
+	OBJECT_KEY = "OBJ_"
 )
-
-// func SaveToken(token string, um models.User) error {
-// 	MAP[token] = um
-// 	return nil
-// }
-
-// func GetToken(token string) (models.User, bool) {
-// 	v, ok := MAP[token]
-// 	if !ok {
-// 		return *new(models.User), false
-// 	}
-// 	return v, true
-// }
 
 //注意是秒
 func SaveToken(token string, um models.UserExt, second int) error {
@@ -37,7 +23,7 @@ func SaveToken(token string, um models.UserExt, second int) error {
 	status := client.Set(token, s, time.Duration(second*1000000000))
 	fmt.Println(status)
 	//mapUserExts[token] = um
-	return nil
+	return status.Err()
 }
 
 func GetToken(token string) (models.UserExt, bool) {
@@ -65,4 +51,26 @@ func GetToken(token string) (models.UserExt, bool) {
 	fmt.Println(error)
 	return *new(models.UserExt), false
 
+}
+
+func SaveObject(objectId string, data []byte, delaySecond int) error {
+	client := CreateClient()
+	status := client.Set(OBJECT_KEY+objectId, data, time.Duration(delaySecond)*time.Second)
+	return status.Err()
+}
+
+func GetObjectAndDelay(objectId string, delaySecond int) ([]byte, error) {
+	client := CreateClient()
+	bs, e := client.Get(OBJECT_KEY + objectId).Bytes()
+
+	nsecond := time.Duration(delaySecond) * time.Second
+	if e == nil && bs != nil {
+		go func() {
+			result := client.Expire(OBJECT_KEY+objectId, nsecond)
+			if result.Err() != nil {
+				fmt.Println("expire data success：" + OBJECT_KEY + objectId)
+			}
+		}()
+	}
+	return bs, e
 }

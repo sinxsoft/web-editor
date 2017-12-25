@@ -54,7 +54,9 @@ func (this *UploadController) Document() {
 	this.Ctx.Request.ParseForm()
 	id := this.Ctx.Input.Param(":splat")
 
-	c, er := models.ContentGetByDocID(strings.Replace(id, ".html", "", -1))
+	docID := strings.Replace(id, ".html", "", -1)
+
+	c, er := models.ContentGetByDocID(docID)
 
 	if er != nil {
 		w.Write([]byte(er.Error()))
@@ -66,14 +68,28 @@ func (this *UploadController) Document() {
 		return
 	}
 
-	//从本地存储拿到html文件
-	b, error := ioutil.ReadFile(beego.AppConfig.String("document.path") + id + ".file")
-	if error != nil {
-		w.Write([]byte(error.Error()))
-		return
+	b, error := libs.GetObjectAndDelay(id, 60*60*24)
+
+	if b != nil && error == nil {
+		//ok
+		fmt.Println("获取data成功：" + id)
+	} else {
+		//从本地存储拿到html文件
+		b, error = ioutil.ReadFile(beego.AppConfig.String("document.path") + id + ".file")
+		if error != nil {
+			this.Ctx.WriteString(error.Error())
+			return
+		}
+		error = libs.SaveObject(id, b, 60*60*24)
+		if error != nil {
+			fmt.Println("Save data 失败：" + id + "," + error.Error())
+		} else {
+			fmt.Println("Save data 成功：" + id)
+		}
+
 	}
+
 	this.Ctx.WriteString(string(b))
-	//w.Write(b)
 
 }
 
