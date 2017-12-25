@@ -62,13 +62,12 @@ func SaveObject(objectId string, data []byte, delaySecond int) error {
 func GetObjectAndDelay(objectId string, delaySecond int) ([]byte, error) {
 	client := CreateClient()
 	bs, e := client.Get(OBJECT_KEY + objectId).Bytes()
-
 	nsecond := time.Duration(delaySecond) * time.Second
 	if e == nil && bs != nil {
 		go func() {
 			result := client.Expire(OBJECT_KEY+objectId, nsecond)
 			if result.Err() != nil {
-				fmt.Println("expire data success：" + OBJECT_KEY + objectId)
+				fmt.Println("expire data fail：" + OBJECT_KEY + objectId)
 			}
 		}()
 	}
