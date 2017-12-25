@@ -3,6 +3,7 @@ package libs
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/sinxsoft/web-editor/app/models"
@@ -67,7 +68,10 @@ func GetObjectAndDelay(objectId string, delaySecond int) ([]byte, error) {
 		go func() {
 			result := client.Expire(OBJECT_KEY+objectId, nsecond)
 			if result.Err() != nil {
-				fmt.Println("expire data fail：" + OBJECT_KEY + objectId)
+				fmt.Println("expire data fail:" + OBJECT_KEY + objectId + ",秒:" + strconv.Itoa(delaySecond))
+			} else {
+
+				fmt.Println("expire data success:" + OBJECT_KEY + objectId + ",秒:" + strconv.Itoa(delaySecond))
 			}
 		}()
 	}
