@@ -166,7 +166,8 @@ func (this *MainController) Login() {
 				user.LastLogin = time.Now().Unix()
 				models.UserUpdate(user)
 				fmt.Println("33")
-				token := "webeditor-" + uuid.NewV1().String()
+				uuid,_:=uuid.NewV1()
+				token := "webeditor-" + uuid.String()
 
 				userExt := models.GenUserExt()
 				userExt.U = *user

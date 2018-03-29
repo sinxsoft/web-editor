@@ -124,7 +124,7 @@ func (this *UploadController) Controller() {
 
 			fileExtName := path.Ext(fileHeader.Filename)
 
-			uuid := uuid.NewV1()
+			uuid,_ := uuid.NewV1()
 			fileName := uuid.String() + fileExtName
 
 			f, err := os.Create(fileName)
@@ -281,8 +281,10 @@ func (this *UploadController) Controller() {
 			}
 
 		} else {
+			uuid,_ := uuid.NewV1()
+
 			this.Data["id"] = -1
-			this.Data["docID"] = strings.Replace(uuid.NewV1().String(), "-", "", -1)
+			this.Data["docID"] = strings.Replace(uuid.String(), "-", "", -1)
 			this.Data["content"] = ""
 			this.Data["name"] = "请修改"
 			this.Data["description"] = "请修改"
