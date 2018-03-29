@@ -12,7 +12,7 @@ import (
 	"github.com/sinxsoft/web-editor/app/models"
 )
 
-const EachPageNum = 2
+const EachPageNum = 10
 
 type MainController struct {
 	BaseController
