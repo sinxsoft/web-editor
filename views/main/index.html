@@ -17,9 +17,8 @@
 				<div class="btn-group">
 				<a href="controller" class="btn btn-large btn-info"><span class="icon-plus"></span> 新建内容</a>
 				</div>
-				
-			
-				
+
+
 			</div>
 	
 			<form id="form-list" method="post" action="">
@@ -73,7 +72,26 @@
 					</tr>
 				{{end}}
 				</tbody>
+
 			</table>
+
+                <div>
+                    共{{.totals}}条记录 共记{{.paginator.totalpages}} 页 当前页  {{.paginator.currpage}}
+                    <div>
+                        <ul>
+                            <li><a href="/index?currentPage={{.paginator.firstpage}}&search={{.search}}">«</a>
+							{{range $index,$page := .paginator.pages}}
+							{{if eq $.paginator.currpage $page }}
+                                {{$page}}
+							{{else}}
+								<a href="/index?currentPage={{$page}}&search={{$.search}}">{{$page}}</a>
+							{{end}}
+							{{end}}
+                                <a href="/index?currentPage={{.paginator.lastpage}}&search={{.search}}">»</a>
+							</li>
+                        </ul>
+                    </div>
+                </div>
 			</form>
 			
 			</div>

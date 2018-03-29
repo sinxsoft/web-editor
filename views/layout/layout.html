@@ -58,7 +58,7 @@
 		<div class="container">
 			<ul class="mainnav">
 				<li {{if eq .curRoute "main.index"}}class="active"{{end}}>
-					<a href="/">
+					<a href="/index?currentPage=1&search={{.search}}">
 						<i class="icon-dashboard"></i>
 						<span>系统概况</span>
 					</a>	    				

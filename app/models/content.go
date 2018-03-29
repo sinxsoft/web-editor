@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
+	"fmt"
 )
 
 type Content struct {
@@ -19,6 +20,39 @@ type Content struct {
 
 func (c *Content) TableName() string {
 	return TableName("content")
+}
+
+//根据条件返回总数
+func GetContentRecordNum(search string) int64 {
+
+	o := orm.NewOrm()
+	qs := o.QueryTable(TableName("content"))
+	if search !=""{
+		qs=qs.Filter("Name",search)
+	}
+	var cnt []Content
+	num, err :=  qs.All(&cnt)
+	if err == nil {
+		return num
+	}else{
+		return 0
+	}
+}
+
+
+//总的content数量
+func SearchContentList(pageSize,pageNo int,search string) ([]Content) {
+	o := orm.NewOrm()
+	qs := o.QueryTable(TableName("content"))
+	if search !=""{
+		qs=qs.Filter("Name",search)
+	}
+	var content []Content
+	cnt, err :=  qs.Limit(pageSize, (pageNo-1)*pageSize).All(&content)
+	if err == nil {
+		fmt.Println("count", cnt)
+	}
+	return content
 }
 
 func (c *Content) Update(fields ...string) error {

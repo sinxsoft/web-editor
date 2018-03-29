@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
+	"strconv"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils"
 	"github.com/satori/go.uuid"
@@ -12,8 +12,14 @@ import (
 	"github.com/sinxsoft/web-editor/app/models"
 )
 
+const EachPageNum = 2
+
 type MainController struct {
 	BaseController
+}
+
+func (this *MainController) Home() {
+	this.redirect("/index?currentPage=1&search=")
 }
 
 func (this *MainController) Index() {
@@ -25,6 +31,32 @@ func (this *MainController) Index() {
 	this.Data["entries"] = entries
 
 	this.display()
+}
+
+
+func (this *MainController) IndexPager() {
+	beego.ReadFromRequest(&this.Controller)
+	this.Data["pageTitle"] = "webpage编辑器"
+	currentPage := this.Ctx.Request.FormValue("currentPage")
+	search := this.Ctx.Request.FormValue("search")
+
+	currPage := 1
+
+	if currentPage != ""{
+		currPage,_ = strconv.Atoi(currentPage)
+	}
+
+
+	//已经新建好的好的页面
+	entries := models.SearchContentList(EachPageNum,currPage,search)
+
+	this.Data["entries"] = entries
+	num:=models.GetContentRecordNum(search)
+	res := libs.Paginator(currPage, EachPageNum, num)
+	this.Data["paginator"] = res
+	this.Data["totals"] = num
+	this.Data["search"] = search
+	this.display("main/index")
 }
 
 // 个人信息
@@ -111,7 +143,7 @@ func (this *MainController) Profile() {
 
 func (this *MainController) Login() {
 	if this.userId > 0 {
-		this.redirect("/")
+		this.redirect("/index?currentPage=1&search=")
 	}
 	//fmt.Println("asdfadsf")
 	beego.ReadFromRequest(&this.Controller)
@@ -153,12 +185,12 @@ func (this *MainController) Login() {
 				}
 
 				//fmt.Println("444444")
-				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))
-				this.redirect(beego.URLFor("MainController.Index"))
+				fmt.Println("login:ok:" + beego.URLFor("MainController.IndexPager"))
+				this.redirect(beego.URLFor("MainController.IndexPager"))
 			}
 			flash.Error(errorMsg)
 			flash.Store(&this.Controller)
-			fmt.Println("login:fail:" + beego.URLFor("MainController.Index"))
+			fmt.Println("login:fail:" + beego.URLFor("MainController.IndexPager"))
 			this.redirect(beego.URLFor("MainController.Login"))
 		}
 	}

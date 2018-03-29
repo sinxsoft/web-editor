@@ -14,10 +14,12 @@ import (
 
 const VERSION = "1.0.0"
 
+
 func main() {
 
 	//自定义load自己的配置，配置文件放到外面
 	error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
+	//error := beego.LoadAppConfig("ini", "/Users/henrik/Documents/golang/src/github.com/sinxsoft/web-editor/conf/app.conf")
 
 	if error != nil {
 		fmt.Println(error)
@@ -40,7 +42,8 @@ func main() {
 	beego.AppConfig.Set("version", VERSION)
 
 	// 路由设置
-	beego.Router("/", &controllers.MainController{}, "*:Index")
+	beego.Router("/", &controllers.MainController{}, "*:Home")
+	beego.Router("/index", &controllers.MainController{}, "*:IndexPager")
 	beego.Router("/login", &controllers.MainController{}, "*:Login")
 	beego.Router("/logout", &controllers.MainController{}, "*:Logout")
 	beego.Router("/profile", &controllers.MainController{}, "*:Profile")
