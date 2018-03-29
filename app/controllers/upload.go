@@ -124,7 +124,7 @@ func (this *UploadController) Controller() {
 
 			fileExtName := path.Ext(fileHeader.Filename)
 
-			uuid := uuid.NewV4()
+			uuid := uuid.NewV1()
 			fileName := uuid.String() + fileExtName
 
 			f, err := os.Create(fileName)
