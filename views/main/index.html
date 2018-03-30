@@ -79,15 +79,15 @@
                     共{{.totals}}条记录 共记{{.paginator.totalpages}} 页 当前页  {{.paginator.currpage}}
                     <div>
                         <ul>
-                            <li><a href="/index?currentPage={{.paginator.firstpage}}&search={{.search}}">«</a>
+                            <li><a href="/index?currentPage={{.paginator.firstpage}}&search={{.search}}">首页</a>
 							{{range $index,$page := .paginator.pages}}
 							{{if eq $.paginator.currpage $page }}
-                                {{$page}}
+                                <span> {{$page}}</span>
 							{{else}}
-								<a href="/index?currentPage={{$page}}&search={{$.search}}">{{$page}}</a>
+                            	<span style=""><a href="/index?currentPage={{$page}}&search={{$.search}}">{{$page}}</a></span>
 							{{end}}
 							{{end}}
-                                <a href="/index?currentPage={{.paginator.lastpage}}&search={{.search}}">»</a>
+                                <a href="/index?currentPage={{.paginator.lastpage}}&search={{.search}}">尾页</a>
 							</li>
                         </ul>
                     </div>
