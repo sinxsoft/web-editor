@@ -250,7 +250,7 @@ func (this *UploadController) Controller() {
 			}
 
 			//删除掉cacheid
-			cacheId := libs.OBJECT_KEY + c.DocId + ".html"
+			cacheId :=  c.DocId + ".html"
 			libs.DelObject(cacheId)
 
 
