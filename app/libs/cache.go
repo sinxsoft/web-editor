@@ -60,6 +60,12 @@ func SaveObject(objectId string, data []byte, delaySecond int) error {
 	return status.Err()
 }
 
+func DelObject(objectId string) error {
+	client := CreateClient()
+	status := client.Del(OBJECT_KEY+objectId)
+	return status.Err()
+}
+
 func GetObjectAndDelay(objectId string, delaySecond int) ([]byte, error) {
 	client := CreateClient()
 	bs, e := client.Get(OBJECT_KEY + objectId).Bytes()

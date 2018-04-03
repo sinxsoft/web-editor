@@ -248,6 +248,12 @@ func (this *UploadController) Controller() {
 				io.WriteString(w, jString)
 				return
 			}
+
+			//删除掉cacheid
+			cacheId := libs.OBJECT_KEY + c.DocId + ".html"
+			libs.DelObject(cacheId)
+
+
 			// result := "<script>window.location.href = '/';</script>"
 			// w.Header().Add("Content-Type", "text/text;charset=utf-8")
 			// w.WriteHeader(200)
