@@ -26,7 +26,6 @@
 					<th width="120" >地址</th>
 					<th class="span2">创建时间</th>
 					<th class="span2">创建人</th>
-					<th width="80" >操作</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -39,11 +38,6 @@
 						<td><a href='{{$v.OssAllUrl}}' target="_blank">点击链接</a></td>
 						<td>{{$v.CreateTime}}</td>
 						<td>{{$v.UserName}}</td>
-						<td>
-							<a class="btn btn-info" href="controller?deleteDoc=true&id={{$v.Id}}">
-								<span class="icon-pencil icon-white"></span> 删除
-							</a>
-						</td>
 					</tr>
 				{{end}}
 				</tbody>
@@ -54,40 +48,3 @@
 		</div>
 	</div>
 	</div> <!-- /row -->
-	
-	<script>
-	
-	
-	function batch(action) {
-		$(".alert").hide();
-		if ($("input[name='ids']:checked").size() < 1) {
-			$(".alert").text("请选择要操作的文档");
-			$(".alert").show();
-		} else {
-			var url = "{{urlfor "UploadController.Controller"}}";
-			$.post(url + "?action=" + action, $("#form-list").serialize(), function(out) {
-				if (out.status != 0) {
-					$(".alert").text(out.msg);
-					$(".alert").show();
-				} else {
-					window.location.reload();
-				}
-			}, "json");
-		}
-		return false;
-	}
-
-	function cancelDel(id) {
-		  if (confirm("确定要恢复该文档？")) {
-				var url = "{{urlfor "UploadController.CancelDel"}}";
-				$.post(url , {ID:id}, function (out) {
-					if (out.state == 'true') {
-						alert(out.msg)
-						window.location.reload();
-					} else {
-						alert(out.msg)
-					}
-				}, "json");
-		  }
-		}
-	</script>
