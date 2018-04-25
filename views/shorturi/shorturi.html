@@ -1,6 +1,5 @@
 <div class="row">
-	<div class="span12">      		
-				   
+	<div class="span12">
 		<div class="widget ">
 			<div class="widget-header">
 				<i class="icon-th-list"></i>
@@ -22,9 +21,10 @@
 				<thead>
 				<tr>
 					<th width="20"><input type="checkbox" name="chkall" value="1"></td>
-					<th width="80">短链接id</th>
+					<th width="50">短链接id</th>
 					<th width="300">长链接</th>
 					<th width="30">状态</th>
+                    <th width="80">说明</th>
 					<th class="span2">更新时间</th>
 					<th class="span2">创建人</th>
 				</tr>
@@ -36,6 +36,7 @@
 						<td class="center">{{$v.ShortUri}}</td>
 						<td>{{$v.LongUri}}</td>
 						<td>{{$v.Status}}</td>
+                        <td>{{$v.Description}}</td>
                         <td>{{$v.UpdateTime}}</td>
 						<td>{{$v.CreateUser}}</td>
 					</tr>

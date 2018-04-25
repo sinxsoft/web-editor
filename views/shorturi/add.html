@@ -10,27 +10,28 @@
 
                 <div class="alert alert-danger hide" role="alert"></div>
 
-                <form id="add-task" action="addshorturi?action=add" method="post" class="form-horizontal">
+                <form id="add-short-uri" action="addshorturi?action=add" method="post" class="form-horizontal">
                     <fieldset>
 
                         <div class="control-group">
                             <label class="control-label" for="Name">短链接</label>
                             <div class="controls">
-                                <input type="text" name="shortUri" class="span6" id="shortUri" value="{{.su.ShortUri}}" >
+                                <input type="text" name="shortUri" class="span6" id="shortUri" value="{{.su.ShortUri}}" >3-10长
+                                <input type="button" name="genShortUri" value="生成"  id="genShortUri">
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="Name">长链接</label>
                             <div class="controls">
-                                <input type="text" name="longUri" class="span6" value="{{.su.LongUri}}" id="longUri">
+                                <input type="text" name="longUri" class="span6" value="{{.su.LongUri}}" id="longUri">10-300长
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="description">说明</label>
                             <div class="controls">
-                                <input type="text" name="description" class="span6" value="{{.su.Description}}" id="description" >
+                                <input type="text" name="description" class="span6" value="{{.su.Description}}" id="description" >100以内
                             </div>
                             <!-- /controls -->
                         </div>
@@ -48,7 +49,9 @@
                 </form>
 
                 <script type="text/javascript">
+
                     function submitData() {
+
                         if(confirm("确定要提交该短链接？")){
                             $.post('{{urlfor "ShortUriController.PutOne"}}',
                                     {shortUri:$("#shortUri").val(),
@@ -64,6 +67,19 @@
                         }
                     };
                     $("#submitBtn").click(submitData);
+
+                    $("#genShortUri").click(function () {
+                        $.post('{{urlfor "ShortUriController.GenShortUri"}}',
+                                {},
+                                function (out) {
+                                    if (out.state == 'true') {
+                                        $("#shortUri").val(out.msg)
+                                    }else{
+                                        alert(out.msg)
+                                    }
+                                });
+                    })
+
                 </script>
             </div>
         </div>
