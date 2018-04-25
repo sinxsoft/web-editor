@@ -70,7 +70,14 @@
 						<span>文档清单</span>
 					</a>
 				</li>
-		
+
+                <li {{if eq .curRoute "shortUri"}}class="active" {{end}}>
+                    <a href="/shorturi">
+                        <i class="icon-list-alt"></i>
+                        <span>短链接</span>
+                    </a>
+                </li>
+
 				<li {{if eq .curController "help"}}class="active"{{end}}>					
 					<a href="/help">
 						<i class="icon-question-sign"></i>
@@ -98,7 +105,7 @@
 		<div class="container">
 			<div class="row">
     			<div class="span7">
-    				&copy; 2015-2016 <a href="http://www.xgqq.com">xgqq.com</a>.
+    				&copy; 2015-2016 .
     			</div>
 			<div class="span5" id="server-time" style="text-align:right">
     				

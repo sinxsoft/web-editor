@@ -18,8 +18,8 @@ const VERSION = "1.0.0"
 func main() {
 
 	//自定义load自己的配置，配置文件放到外面
-	error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
-	//error := beego.LoadAppConfig("ini", "/Users/henrik/Documents/golang/src/github.com/sinxsoft/web-editor/conf/app.conf")
+	////error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
+	error := beego.LoadAppConfig("ini", "/Users/henrik/Documents/golang/src/github.com/sinxsoft/web-editor/conf/app.conf")
 
 	if error != nil {
 		fmt.Println(error)
@@ -56,6 +56,11 @@ func main() {
 
 	beego.Router("/doc/*", &controllers.UploadController{}, "*:Document")
 	beego.Router("/doclist", &controllers.UploadController{}, "*:DocList")
+
+	beego.Router("/shorturi", &controllers.ShortUriController{}, "*:Index")
+	beego.Router("/showshorturi", &controllers.ShortUriController{}, "*:ShowOne")
+	beego.Router("/addshorturi", &controllers.ShortUriController{}, "*:PutOne")
+	beego.Router("/t/:id:string",&controllers.ShortUriController{},"*:Redirect")
 
 	beego.AutoRouter(&controllers.UploadController{})
 	//add a test page by henrik

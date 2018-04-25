@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="span12">
+        <div class="widget ">
+            <div class="widget-header">
+                <i class="icon-plus"></i>
+                <h3>添加短链接</h3>
+            </div>
+
+            <div class="widget-content">
+
+                <div class="alert alert-danger hide" role="alert"></div>
+
+                <form id="add-task" action="addshorturi?action=add" method="post" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="Name">短链接</label>
+                            <div class="controls">
+                                <input type="text" name="shortUri" class="span6" id="shortUri" value="{{.su.ShortUri}}" >
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="Name">长链接</label>
+                            <div class="controls">
+                                <input type="text" name="longUri" class="span6" value="{{.su.LongUri}}" id="longUri">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="description">说明</label>
+                            <div class="controls">
+                                <input type="text" name="description" class="span6" value="{{.su.Description}}" id="description" >
+                            </div>
+                            <!-- /controls -->
+                        </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="description"> </label>
+                            <div class="controls">
+                                <input type="button" name="submitBtn" id="submitBtn" value="提 交" />
+                            </div>
+                        </div>
+
+                        
+                    </fieldset>
+                </form>
+
+                <script type="text/javascript">
+                    function submitData() {
+                        if(confirm("确定要提交该短链接？")){
+                            $.post('{{urlfor "ShortUriController.PutOne"}}',
+                                    {shortUri:$("#shortUri").val(),
+                                    longUri:$("#longUri").val(),
+                                    description:$("#description").val()},
+                                    function (out) {
+                                if (out.state == 'true') {
+                                    window.location.href = '/shorturi';
+                                }else{
+                                    alert(out.msg)
+                                }
+                            });
+                        }
+                    };
+                    $("#submitBtn").click(submitData);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

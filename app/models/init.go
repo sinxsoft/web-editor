@@ -27,6 +27,8 @@ func Init() {
 	orm.RegisterModel(new(User))
 	orm.RegisterModel(new(Content))
 	orm.RegisterModel(new(DocumentList))
+	orm.RegisterModel(new(ShortUri))
+	//orm.RegisterModel(new(ShortUriExt))
 
 	// c := new(Command)
 	// c.CommandId = 111
