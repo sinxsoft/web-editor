@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-
 	"github.com/astaxie/beego"
 	"github.com/sinxsoft/web-editor/app/controllers"
 	"github.com/sinxsoft/web-editor/app/models"
+	"github.com/dchest/captcha"
+	"github.com/sinxsoft/web-editor/app/libs"
 )
 
 const VERSION = "1.0.0"
@@ -19,7 +20,6 @@ func main() {
 
 	//自定义load自己的配置，配置文件放到外面
 	error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
-	//error := beego.LoadAppConfig("ini", "/Users/henrik/Documents/golang/src/github.com/sinxsoft/web-editor/conf/app.conf")
 
 	if error != nil {
 		fmt.Println(error)
@@ -63,6 +63,9 @@ func main() {
 	beego.Router("/t/:id:string",&controllers.ShortUriController{},"*:Redirect")
 	beego.Router("/genshorturi",&controllers.ShortUriController{},"*:GenShortUri")
 
+	beego.Router("/verify", &controllers.CaptchaController{}, "post:VerifyCaptcha")
+	beego.Handler("/captcha/*.png", captcha.Server(240, 80))
+
 	beego.AutoRouter(&controllers.UploadController{})
 	//add a test page by henrik
 	//beego.AutoRouter(&controllers.CommandController{})
@@ -81,6 +84,9 @@ func main() {
 
 	filters := beego.AppConfig.String("action.noauth.url")
 	controllers.Filters = strings.Split(filters, ",")
+
+	//设置自己的store
+	captcha.SetCustomStore( new(libs.RedisStore))
 
 	beego.Run()
 }

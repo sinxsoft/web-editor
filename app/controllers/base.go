@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
+	"time"
 )
 
 var (
@@ -99,30 +100,29 @@ func (this *BaseController) auth() {
 
 }
 
-// func (this *BaseController) auth() {
-// 	arr := strings.Split(this.Ctx.GetCookie("auth"), "|")
 
-// 	if len(arr) == 2 {
-// 		idstr, password := arr[0], arr[1]
-// 		userId, _ := strconv.Atoi(idstr)
-// 		if userId > 0 {
-// 			fmt.Println("2")
-// 			user, err := models.UserGetById(userId)
-// 			if err == nil && password == libs.Md5([]byte(this.getClientIp()+"|"+user.Password+user.Salt)) {
-// 				this.userId = user.Id
-// 				this.userName = user.UserName
-// 				this.user = user
-// 				fmt.Println("3")
-// 			}
-// 		}
-// 	}
+// 1 success
+// 0 fail
+func JsonFormat(retcode int, retmsg string, retdata interface{}, stime time.Time) (json map[string]interface{}) {
+	cost := time.Now().Sub(stime).Seconds()
+	if retcode == 1 {
+		json = map[string]interface{}{
+			"code": retcode,
+			"data": retdata,
+			"desc": retmsg,
+			"cost": cost,
+		}
+	} else {
+		json = map[string]interface{}{
+			"code": retcode,
+			"desc": retmsg,
+			"cost": cost,
+		}
+	}
 
-// 	if this.userId == 0 && (this.controllerName != "main" ||
-// 		(this.controllerName == "main" && this.actionName != "logout" && this.actionName != "login")) {
-// 		fmt.Println("4")
-// 		this.redirect(beego.URLFor("MainController.Login"))
-// 	}
-// }
+	return json
+}
+
 
 //渲染模版
 func (this *BaseController) display(tpl ...string) {

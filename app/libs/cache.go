@@ -83,3 +83,20 @@ func GetObjectAndDelay(objectId string, delaySecond int) ([]byte, error) {
 	}
 	return bs, e
 }
+
+func GetObjectAndCollect(objectId string) ([]byte, error) {
+	client := CreateClient()
+	bs, e := client.Get(OBJECT_KEY + objectId).Bytes()
+	if e == nil && bs != nil {
+		go func() {
+			result := client.Del(OBJECT_KEY+objectId)
+			if result.Err() != nil {
+				fmt.Println("collect data fail:" + OBJECT_KEY + objectId )
+			} else {
+
+				fmt.Println("collect data success:" + OBJECT_KEY + objectId )
+			}
+		}()
+	}
+	return bs, e
+}

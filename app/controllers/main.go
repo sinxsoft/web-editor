@@ -10,6 +10,7 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
+	"github.com/dchest/captcha"
 )
 
 const EachPageNum = 10
@@ -153,19 +154,30 @@ func (this *MainController) Login() {
 		username := strings.TrimSpace(this.GetString("username"))
 		password := strings.TrimSpace(this.GetString("password"))
 		remember := this.GetString("remember")
+		captchaId := this.GetString("captchaId")
+		captchaValue := this.GetString("captcha")
+
+		errorMsg := ""
+		if !captcha.VerifyString(captchaId, captchaValue) {
+			errorMsg = "验证码错误！"
+			flash.Error(errorMsg)
+			flash.Store(&this.Controller)
+			this.redirect(beego.URLFor("MainController.Login"))
+			return
+		}
 		if username != "" && password != "" {
 			user, err := models.UserGetByName(username)
-			fmt.Println("11")
-			errorMsg := ""
+
+
 			if err != nil || user.Password != libs.Md5([]byte(password+user.Salt)) {
-				errorMsg = "帐号或密码错误"
+				errorMsg = "帐号或密码错误！"
 			} else if user.Status == -1 {
-				errorMsg = "该帐号已禁用"
+				errorMsg = "该帐号已禁用！"
 			} else {
 				user.LastIp = this.getClientIp()
 				user.LastLogin = time.Now().Unix()
 				models.UserUpdate(user)
-				fmt.Println("33")
+
 				uuid,_:=uuid.NewV1()
 				token := "webeditor-" + uuid.String()
 
@@ -185,7 +197,6 @@ func (this *MainController) Login() {
 					libs.SaveToken(token, userExt, second/7) //秒,一天过期
 				}
 
-				//fmt.Println("444444")
 				fmt.Println("login:ok:" + beego.URLFor("MainController.IndexPager"))
 				this.redirect(beego.URLFor("MainController.IndexPager"))
 			}
@@ -195,6 +206,13 @@ func (this *MainController) Login() {
 			this.redirect(beego.URLFor("MainController.Login"))
 		}
 	}
+
+	d := struct {
+		CaptchaId string
+	}{
+		captcha.New(),
+	}
+	this.Data["CaptchaId"] = d.CaptchaId
 
 	this.TplName = "main/login.html"
 }

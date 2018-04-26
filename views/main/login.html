@@ -47,7 +47,14 @@
 					<label for="password">密码</label>
 					<input type="password" id="password" name="password" value="" placeholder="Password" class="login password-field"/>
 				</div> <!-- /password -->
-				
+
+                <div class="field">
+                    <label for="username">验证码</label>
+                    <input type="text" id="captcha" name="captcha" placeholder="验证码" class="login captcha-field" >
+					<p><img id=image src="/captcha/{{.CaptchaId}}.png" onclick="reload()" alt="Captcha image"></p>
+					<input type=hidden name=captchaId value="{{.CaptchaId}}">
+                </div> <!--  -->
+
 			</div> <!-- /login-fields -->
 			
 			<div class="login-actions">	
@@ -64,5 +71,20 @@
 
 <script src="/static/js/jquery-1.7.2.min.js"></script>
 <script src="/static/js/bootstrap.js"></script>
+<script>
+    function setSrcQuery(e, q) {
+        var src  = e.src;
+        var p = src.indexOf('?');
+        if (p >= 0) {
+            src = src.substr(0, p);
+        }
+        e.src = src + "?" + q
+    }
+
+    function reload() {
+        setSrcQuery(document.getElementById('image'), "reload=" + (new Date()).getTime());
+        return false;
+    }
+</script>
 </body>
 </html>
