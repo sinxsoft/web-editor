@@ -20,6 +20,7 @@ func main() {
 
 	//自定义load自己的配置，配置文件放到外面
 	error := beego.LoadAppConfig("ini", "/a/www/webeditor/app.conf")
+	//error := beego.LoadAppConfig("ini", "/Users/henrik/Documents/golang/src/github.com/sinxsoft/web-editor/conf/app.conf")
 
 	if error != nil {
 		fmt.Println(error)

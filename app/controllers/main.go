@@ -96,52 +96,6 @@ func (this *MainController) Profile() {
 	this.display()
 }
 
-// 登录
-// func (this *MainController) Login() {
-// 	if this.userId > 0 {
-// 		this.redirect("/")
-// 	}
-// 	//fmt.Println("asdfadsf")
-// 	beego.ReadFromRequest(&this.Controller)
-// 	if this.isPost() {
-// 		flash := beego.NewFlash()
-
-// 		username := strings.TrimSpace(this.GetString("username"))
-// 		password := strings.TrimSpace(this.GetString("password"))
-// 		remember := this.GetString("remember")
-// 		if username != "" && password != "" {
-// 			user, err := models.UserGetByName(username)
-// 			fmt.Println("11")
-// 			errorMsg := ""
-// 			if err != nil || user.Password != libs.Md5([]byte(password+user.Salt)) {
-// 				errorMsg = "帐号或密码错误"
-// 			} else if user.Status == -1 {
-// 				errorMsg = "该帐号已禁用"
-// 			} else {
-// 				user.LastIp = this.getClientIp()
-// 				user.LastLogin = time.Now().Unix()
-// 				models.UserUpdate(user)
-// 				fmt.Println("33")
-// 				authkey := libs.Md5([]byte(this.getClientIp() + "|" + user.Password + user.Salt))
-// 				if remember == "yes" {
-// 					this.Ctx.SetCookie("auth", strconv.Itoa(user.Id)+"|"+authkey, 7*86400)
-// 				} else {
-// 					this.Ctx.SetCookie("auth", strconv.Itoa(user.Id)+"|"+authkey)
-// 				}
-// 				fmt.Println("44")
-// 				fmt.Println("login:ok:" + beego.URLFor("MainController.Index"))
-// 				this.redirect(beego.URLFor("MainController.Index"))
-// 			}
-// 			flash.Error(errorMsg)
-// 			flash.Store(&this.Controller)
-// 			fmt.Println("login:fail:" + beego.URLFor("MainController.Index"))
-// 			this.redirect(beego.URLFor("MainController.Login"))
-// 		}
-// 	}
-
-// 	this.TplName = "main/login.html"
-// }
-
 func (this *MainController) Login() {
 	if this.userId > 0 {
 		this.redirect("/index?currentPage=1&search=")
@@ -219,7 +173,10 @@ func (this *MainController) Login() {
 
 // 退出登录
 func (this *MainController) Logout() {
-	this.Ctx.SetCookie("auth", "")
+
+	libs.DeleteToken(this.Ctx.GetCookie("token"))
+	this.Ctx.SetCookie("token", "")
+	this.Ctx.SetCookie("username", "")
 	this.redirect(beego.URLFor("MainController.Login"))
 }
 

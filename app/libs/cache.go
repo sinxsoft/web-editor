@@ -27,6 +27,12 @@ func SaveToken(token string, um models.UserExt, second int) error {
 	return status.Err()
 }
 
+func DeleteToken(token string) error {
+	client := CreateClient()
+	status := client.Del(token)
+	return status.Err()
+}
+
 func GetToken(token string) (models.UserExt, bool) {
 	client := CreateClient()
 	sc, e := client.Get(token).Result()
