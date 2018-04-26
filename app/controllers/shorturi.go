@@ -60,6 +60,7 @@ func (this *ShortUriController) Index() {
 	this.Data["paginator"] = res
 	this.Data["totals"] = num
 	this.Data["search"] = search
+	this.Data["baseurl"] = beego.AppConfig.String("short.baseurl")
 	this.display("shorturi/shorturi")
 }
 
@@ -74,7 +75,7 @@ func (this *ShortUriController) PutOne() {
 	shortUri := this.Ctx.Request.FormValue("shortUri")
 	longUri := this.Ctx.Request.FormValue("longUri")
 	description := this.Ctx.Request.FormValue("description")
-
+	status := this.Ctx.Request.FormValue("status")
 	if strings.Count(shortUri,"")-1 <3 ||
 		strings.Count(shortUri,"")-1 >10{
 		jsonString := fmt.Sprintf(DOC_RESULT_JSON, "false", "短链接长度必须在区间[3,10]！")
@@ -100,7 +101,9 @@ func (this *ShortUriController) PutOne() {
 	msg := "新增成功!"
 	if error ==nil && su != nil{
 		su.LongUri = longUri
-		su.Status = "01"
+		if strings.TrimSpace(status) != ""{
+			su.Status = status
+		}
 		su.Description = description
 		models.ShortUriUpdate(su)
 		msg = "修改成功!"
@@ -108,7 +111,7 @@ func (this *ShortUriController) PutOne() {
 		su = new(models.ShortUri)
 		su.ShortUri = shortUri
 		su.LongUri = longUri
-		//su.Status = status
+		su.Status = "10" //default 10
 		su.Description = description
 		su.CreateUser = this.Data["loginUserName"].(string)
 		models.ShortUriAdd(su)

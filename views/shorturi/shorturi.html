@@ -21,10 +21,10 @@
 				<thead>
 				<tr>
 					<th width="20"><input type="checkbox" name="chkall" value="1"></td>
-					<th width="50">短链接id</th>
+					<th width="300">短链接</th>
 					<th width="300">长链接</th>
 					<th width="30">状态</th>
-                    <th width="80">说明</th>
+                    <th width="30">说明</th>
 					<th class="span2">更新时间</th>
 					<th class="span2">创建人</th>
 				</tr>
@@ -33,7 +33,7 @@
 				{{range $k, $v := .entries}}
 					<tr>
 						<td><input type="checkbox" name="ids" value="{{$v.ShortUri}}" /></td>
-						<td class="center">{{$v.ShortUri}}</td>
+						<td> <a href="{{$.baseurl}}{{$v.ShortUri}}" target="_blank">{{$.baseurl}}{{$v.ShortUri}}</a> </td>
 						<td>{{$v.LongUri}}</td>
 						<td>{{$v.Status}}</td>
                         <td>{{$v.Description}}</td>

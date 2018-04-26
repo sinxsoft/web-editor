@@ -11,6 +11,7 @@ import (
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
 	"github.com/dchest/captcha"
+	"io"
 )
 
 const EachPageNum = 10
@@ -36,6 +37,12 @@ func (this *MainController) Index() {
 
 
 func (this *MainController) IndexPager() {
+
+	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain"){
+		io.WriteString(this.Ctx.ResponseWriter,"域名错误！")
+		return
+	}
+
 	beego.ReadFromRequest(&this.Controller)
 	this.Data["pageTitle"] = "webpage编辑器"
 	currentPage := this.Ctx.Request.FormValue("currentPage")
@@ -100,6 +107,15 @@ func (this *MainController) Login() {
 	if this.userId > 0 {
 		this.redirect("/index?currentPage=1&search=")
 	}
+
+	fmt.Println(this.Ctx.Input.Domain())
+	fmt.Println(beego.AppConfig.String("back.domain"))
+
+	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain"){
+		io.WriteString(this.Ctx.ResponseWriter,"域名错误！")
+		return
+	}
+
 	//fmt.Println("asdfadsf")
 	beego.ReadFromRequest(&this.Controller)
 	if this.isPost() {
