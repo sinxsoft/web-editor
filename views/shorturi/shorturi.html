@@ -1,70 +1,110 @@
 <div class="row">
-	<div class="span12">
-		<div class="widget ">
-			<div class="widget-header">
-				<i class="icon-th-list"></i>
-				 <h3>短链接列表</h3>
-			</div> <!-- /widget-header -->
-	
-			<div class="widget-content">
-			
-			<div class="alert hide" role="alert"></div>
+    <div class="span12">
+        <div class="widget ">
+            <div class="widget-header">
+                <i class="icon-th-list"></i>
+                <h3>短链接列表</h3>
+            </div> <!-- /widget-header -->
 
-			<div class="btn-toolbar">
-				<div class="btn-group">
-					<a href="showshorturi?action=new" class="btn btn-large btn-info"><span class="icon-plus"></span> 新建短链接</a>
-				</div>
-			</div>
-	
-			<form id="form-list" method="post" action="">
-			<table class="table table-striped table-bordered table-hover">
-				<thead>
-				<tr>
-					<th width="20"><input type="checkbox" name="chkall" value="1"></td>
-					<th width="300">短链接</th>
-					<th width="300">长链接</th>
-					<th width="30">状态</th>
-                    <th width="30">说明</th>
-					<th class="span2">更新时间</th>
-					<th class="span2">创建人</th>
-				</tr>
-				</thead>
-				<tbody>
-				{{range $k, $v := .entries}}
-					<tr>
-						<td><input type="checkbox" name="ids" value="{{$v.ShortUri}}" /></td>
-						<td> <a href="{{$.baseurl}}{{$v.ShortUri}}" target="_blank">{{$.baseurl}}{{$v.ShortUri}}</a> </td>
-						<td>{{$v.LongUri}}</td>
-						<td>{{$v.Status}}</td>
-                        <td>{{$v.Description}}</td>
-                        <td>{{$v.UpdateTime}}</td>
-						<td>{{$v.CreateUser}}</td>
-					</tr>
-				{{end}}
-				</tbody>
-			</table>
+            <div class="widget-content">
 
-                <div>
-                    共{{.totals}}条记录 共记{{.paginator.totalpages}} 页 当前页  {{.paginator.currpage}}
-                    <div>
-                        <ul>
-                            <li><a href="/shorturi?currentPage={{.paginator.firstpage}}&search={{.search}}">首页</a>
-							{{range $index,$page := .paginator.pages}}
-							{{if eq $.paginator.currpage $page }}
-                                <span> {{$page}}</span>
-							{{else}}
-                                <span style=""><a href="/shorturi?currentPage={{$page}}&search={{$.search}}">{{$page}}</a></span>
-							{{end}}
-							{{end}}
-                                <a href="/shorturi?currentPage={{.paginator.lastpage}}&search={{.search}}">尾页</a>
-                            </li>
-                        </ul>
+                <div class="alert hide" role="alert"></div>
+
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <a href="showshorturi?action=new" class="btn btn-large btn-info"><span class="icon-plus"></span>
+                            新建短链接</a>
                     </div>
                 </div>
 
-			</form>
-			
-			</div>
-		</div>
-	</div>
-	</div> <!-- /row -->
+                <form id="form-list" method="post" action="">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th width="20"><input type="checkbox" name="chkall" value="1">
+                            </td>
+                            <th width="60"> 操作
+                            </td>
+                            <th width="100">短链接</th>
+                            <th width="100">长链接</th>
+                            <th width="110">状态</th>
+                            <th width="60">说明</th>
+                            <th class="span2">更新时间</th>
+                            <th class="span2">创建人</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{range $k, $v := .entries}}
+                        <tr>
+                            <td><input type="checkbox" name="ids" value="{{$v.ShortUri}}"/></td>
+                            <td style="white-space: nowrap;">
+                            <span class="link"><a href="showshorturi?action=edit&shortUri={{$v.ShortUri}}">编辑</a> |
+                            {{if eq $v.Status "10"}}
+                                <a href="javascript:ChangeStatus('{{$v.ShortUri}}','20')">作废</a>
+                            {{else}}
+                                <a href="javascript:ChangeStatus('{{$v.ShortUri}}','10')">启用</a>
+                            {{end}}</span>
+                            </td>
+                            <td><a href="{{$.baseurl}}{{$v.ShortUri}}" target="_blank">{{$.baseurl}}{{$v.ShortUri}}</a>
+                            </td>
+                            <td>{{$v.LongUri}}</td>
+                            <td>
+                            {{if eq $v.Status "10"}}
+                                <a class="btn btn-success" >已启用</a>
+                            {{else}}
+                                <a class="btn btn-danger" >已作废</a>
+                            {{end}}
+                            </td>
+                            <td>{{$v.Description}}</td>
+                            <td>{{$v.UpdateTime}}</td>
+                            <td>{{$v.CreateUser}}</td>
+                        </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+
+                    <div>
+                        共{{.totals}}条记录 共记{{.paginator.totalpages}} 页 当前页  {{.paginator.currpage}}
+                        <div>
+                            <ul>
+                                <li><a href="/shorturi?currentPage={{.paginator.firstpage}}&search={{.search}}">首页</a>
+                                {{range $index,$page := .paginator.pages}}
+                                {{if eq $.paginator.currpage $page }}
+                                    <span> {{$page}}</span>
+                                {{else}}
+                                    <span style=""><a
+                                            href="/shorturi?currentPage={{$page}}&search={{$.search}}">{{$page}}</a></span>
+                                {{end}}
+                                {{end}}
+                                    <a href="/shorturi?currentPage={{.paginator.lastpage}}&search={{.search}}">尾页</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div> <!-- /row -->
+<script>
+    function ChangeStatus(shortUri, status) {
+        if (confirm("确定要提交吗？")) {
+            $.post('{{urlfor "ShortUriController.ChangeStatus"}}',
+                    {
+                        shortUri: shortUri,
+                        status: status,
+                    },
+                    function (out) {
+                        if (out.state == 'true') {
+                            alert(out.msg)
+                            window.location.reload(true);
+                            //window.location.href = window.location.href;
+                        } else {
+                            alert(out.msg)
+                        }
+                    });
+        }
+    }
+</script>

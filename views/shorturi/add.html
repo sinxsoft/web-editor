@@ -10,13 +10,15 @@
 
                 <div class="alert alert-danger hide" role="alert"></div>
 
-                <form id="add-short-uri" action="addshorturi?action=add" method="post" class="form-horizontal">
+                <form id="add-short-uri" action="addshorturi" method="post" class="form-horizontal">
                     <fieldset>
 
                         <div class="control-group">
                             <label class="control-label" for="Name">短链接</label>
                             <div class="controls">
-                                <input type="text" name="shortUri" class="span6" id="shortUri" value="{{.su.ShortUri}}" >3-10长
+                                <input type="text" name="shortUri" class="span6"
+                            {{if eq .action "edit"}} readonly="readonly"{{end}}
+                                       id="shortUri" value="{{.su.ShortUri}}" >3-10长
                                 <input type="button" name="genShortUri" value="生成"  id="genShortUri">
                             </div>
                         </div>
@@ -53,7 +55,7 @@
                     function submitData() {
 
                         if(confirm("确定要提交该短链接？")){
-                            $.post('{{urlfor "ShortUriController.PutOne"}}',
+                            $.post('{{urlfor "ShortUriController.PutOne"}}?action={{.action}}',
                                     {shortUri:$("#shortUri").val(),
                                     longUri:$("#longUri").val(),
                                     description:$("#description").val()},

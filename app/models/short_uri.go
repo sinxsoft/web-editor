@@ -103,5 +103,5 @@ func ShortUriGetByShort(su string) (*ShortUri, error) {
 }
 
 func ShortUriUpdate(shortUri *ShortUri) (int64, error) {
-	return orm.NewOrm().Update(shortUri,"LongUri","Status","UpdateTime")
+	return orm.NewOrm().Update(shortUri,"LongUri","Status","UpdateTime","Description")
 }

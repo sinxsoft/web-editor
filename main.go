@@ -63,6 +63,7 @@ func main() {
 	beego.Router("/addshorturi", &controllers.ShortUriController{}, "*:PutOne")
 	beego.Router("/t/:id:string",&controllers.ShortUriController{},"*:Redirect")
 	beego.Router("/genshorturi",&controllers.ShortUriController{},"*:GenShortUri")
+	beego.Router("/short/changeStatus",&controllers.ShortUriController{},"*:ChangeStatus")
 
 	beego.Router("/verify", &controllers.CaptchaController{}, "post:VerifyCaptcha")
 	beego.Handler("/captcha/*.png", captcha.Server(240, 80))
