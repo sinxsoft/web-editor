@@ -220,6 +220,7 @@ func (this *ShortUriController) ChangeStatus() {
 			io.WriteString(w, jsonString)
 		} else {
 			su.Status = status
+			su.UpdateTime = time.Now().Format("2006-01-02 15:04:05")
 			models.ShortUriUpdate(su)
 			jsonString := fmt.Sprintf(DOC_RESULT_JSON, "true", "成功！")
 			io.WriteString(w, jsonString)
