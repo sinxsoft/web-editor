@@ -1,1 +1,1 @@
-nohup /a/www/webeditor/execute/web-editor-2018-04-26-02 > /a/logs/webeditorlogs/webeditor6.logs 2>&1 &
+nohup /a/www/webeditor/execute/web-editor-2018-04-27-01 > /a/logs/webeditorlogs/webeditor2701.logs 2>&1 &

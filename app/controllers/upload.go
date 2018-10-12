@@ -16,6 +16,7 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
+	"sync"
 )
 
 const (
@@ -36,6 +37,7 @@ func (this *UploadController) Object() {
 	//从oss拿到对象
 	b := this.GetOss(file)
 	w.Write(b)
+	w.Flush()
 }
 
 func (this *UploadController) DocList() {
@@ -124,7 +126,7 @@ func (this *UploadController) Controller() {
 
 			fileExtName := path.Ext(fileHeader.Filename)
 
-			uuid,_ := uuid.NewV1()
+			uuid, _ := uuid.NewV1()
 			fileName := uuid.String() + fileExtName
 
 			f, err := os.Create(fileName)
@@ -250,9 +252,8 @@ func (this *UploadController) Controller() {
 			}
 
 			//删除掉cacheid
-			cacheId :=  c.DocId + ".html"
+			cacheId := c.DocId + ".html"
 			libs.DelObject(cacheId)
-
 
 			// result := "<script>window.location.href = '/';</script>"
 			// w.Header().Add("Content-Type", "text/text;charset=utf-8")
@@ -287,7 +288,7 @@ func (this *UploadController) Controller() {
 			}
 
 		} else {
-			uuid,_ := uuid.NewV1()
+			uuid, _ := uuid.NewV1()
 
 			this.Data["id"] = -1
 			this.Data["docID"] = strings.Replace(uuid.String(), "-", "", -1)
@@ -301,15 +302,34 @@ func (this *UploadController) Controller() {
 	}
 }
 
-func (this *UploadController) GetOss(objectKey string) []byte {
+var once sync.Once
+var client *oss.Client
+
+func InitOssConfig() {
 	accessKey := beego.AppConfig.String("oss.key")
 	accessKeySecret := beego.AppConfig.String("oss.secret")
 	endPoint := beego.AppConfig.String("oss.clientEndPoint")
-	client, err := oss.New(endPoint, accessKey, accessKeySecret)
-
+	cli, err := oss.New(endPoint, accessKey, accessKeySecret)
 	if err != nil {
 		models.HandleError(err)
+		beego.Error("initOssConfig执行错误！")
 	}
+	client = cli
+}
+
+func (this *UploadController) GetOss(objectKey string) []byte {
+	//accessKey := beego.AppConfig.String("oss.key")
+	//accessKeySecret := beego.AppConfig.String("oss.secret")
+	//endPoint := beego.AppConfig.String("oss.clientEndPoint")
+	//client, err := oss.New(endPoint, accessKey, accessKeySecret)
+
+	//if err != nil {
+	//	models.HandleError(err)
+	//}
+
+	//只做一次
+	once.Do(InitOssConfig)
+
 	bucket, err := client.Bucket(beego.AppConfig.String("oss.bucketName"))
 
 	body, err := bucket.GetObject(objectKey)
@@ -325,13 +345,15 @@ func (this *UploadController) GetOss(objectKey string) []byte {
 }
 
 func (this *UploadController) UploadOss(objectKey string, localFile string, originalFileName string) string {
-	accessKey := beego.AppConfig.String("oss.key")
-	accessKeySecret := beego.AppConfig.String("oss.secret")
-	endPoint := beego.AppConfig.String("oss.clientEndPoint")
-	client, err := oss.New(endPoint, accessKey, accessKeySecret)
-	if err != nil {
-		models.HandleError(err)
-	}
+	//accessKey := beego.AppConfig.String("oss.key")
+	//accessKeySecret := beego.AppConfig.String("oss.secret")
+	//endPoint := beego.AppConfig.String("oss.clientEndPoint")
+	//client, err := oss.New(endPoint, accessKey, accessKeySecret)
+	//if err != nil {
+	//	models.HandleError(err)
+	//}
+
+	once.Do(InitOssConfig)
 
 	bucket, err := client.Bucket(beego.AppConfig.String("oss.bucketName"))
 

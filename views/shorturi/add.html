@@ -3,7 +3,13 @@
         <div class="widget ">
             <div class="widget-header">
                 <i class="icon-plus"></i>
-                <h3>添加短链接</h3>
+                <h3>
+                {{if eq .action "edit"}}
+                    修改短链接
+                {{else}}
+                    添加短链接
+                {{end}}
+                </h3>
             </div>
 
             <div class="widget-content">
@@ -19,7 +25,9 @@
                                 <input type="text" name="shortUri" class="span6"
                             {{if eq .action "edit"}} readonly="readonly"{{end}}
                                        id="shortUri" value="{{.su.ShortUri}}" >3-10长
+                            {{if eq .action "new"}}
                                 <input type="button" name="genShortUri" value="生成"  id="genShortUri">
+                            {{end}}
                             </div>
                         </div>
 

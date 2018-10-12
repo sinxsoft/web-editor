@@ -92,5 +92,6 @@ func Upload() (err error) {
 	}
 	io.Copy(os.Stderr, res.Body) // Replace this with Status.Code check
 	fmt.Println("h")
+	res.Body.Close()
 	return err
 }

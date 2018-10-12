@@ -10,16 +10,16 @@ import (
 )
 
 var (
-	isInit   bool = false
-	mutex         = &sync.Mutex{}
-	db       int
-	addr     string
-	password string
+	isInit      bool = false
+	mutex            = &sync.Mutex{}
+	db          int
+	addr        string
+	password    string
+	redisOnce   sync.Once
+	RedisClient *redis.Client
 )
 
-// 创建 redis 客户端
-func CreateClient() *redis.Client {
-
+func initRedis() {
 	if !isInit {
 		mutex.Lock()
 		if !isInit {
@@ -38,25 +38,27 @@ func CreateClient() *redis.Client {
 	}
 
 	op := new(redis.Options)
-
 	op.Addr = addr
 	op.DB = db
-
 	if password != "" {
 		op.Password = password
 	}
-
 	op.PoolSize = 5
-
 	client := redis.NewClient(op)
-
 	// 通过 cient.Ping() 来检查是否成功连接到了 redis 服务器
 	pong, err := client.Ping().Result()
-	fmt.Println(pong, err)
+	beego.Info(pong, err)
+	//fmt.Println(pong, err)
 	//json.Marshal()
 	//client.Set("","",超时)
 	//client.HMSet
-	return client
+	RedisClient = client
+}
+
+// 创建 redis 客户端
+func CreateClient() *redis.Client {
+	redisOnce.Do(initRedis)
+	return RedisClient
 }
 
 // set(key, value)：给数据库中名称为key的string赋予值value
