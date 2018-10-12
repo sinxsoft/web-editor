@@ -2,20 +2,19 @@ package main
 
 import (
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/dchest/captcha"
+	"github.com/sinxsoft/web-editor/app/controllers"
+	"github.com/sinxsoft/web-editor/app/libs"
+	"github.com/sinxsoft/web-editor/app/models"
 	"html/template"
 	"net/http"
+	_ "net/http/pprof"
 	"reflect"
 	"strings"
-	"github.com/astaxie/beego"
-	"github.com/sinxsoft/web-editor/app/controllers"
-	"github.com/sinxsoft/web-editor/app/models"
-	"github.com/dchest/captcha"
-	"github.com/sinxsoft/web-editor/app/libs"
-	 _ "net/http/pprof"
 )
 
 const VERSION = "1.0.0"
-
 
 func main() {
 
@@ -62,9 +61,9 @@ func main() {
 	beego.Router("/shorturi", &controllers.ShortUriController{}, "*:Index")
 	beego.Router("/showshorturi", &controllers.ShortUriController{}, "*:ShowOne")
 	beego.Router("/addshorturi", &controllers.ShortUriController{}, "*:PutOne")
-	beego.Router("/t/:id:string",&controllers.ShortUriController{},"*:Redirect")
-	beego.Router("/genshorturi",&controllers.ShortUriController{},"*:GenShortUri")
-	beego.Router("/short/changeStatus",&controllers.ShortUriController{},"*:ChangeStatus")
+	beego.Router("/t/:id:string", &controllers.ShortUriController{}, "*:Redirect")
+	beego.Router("/genshorturi", &controllers.ShortUriController{}, "*:GenShortUri")
+	beego.Router("/short/changeStatus", &controllers.ShortUriController{}, "*:ChangeStatus")
 
 	beego.Router("/verify", &controllers.CaptchaController{}, "post:VerifyCaptcha")
 	beego.Handler("/captcha/*.png", captcha.Server(240, 80))
@@ -89,15 +88,15 @@ func main() {
 	controllers.Filters = strings.Split(filters, ",")
 
 	//设置自己的store
-	captcha.SetCustomStore( new(libs.RedisStore))
+	captcha.SetCustomStore(new(libs.RedisStore))
 
 	//golang 内存分析/动态追踪
 	//golang pprof
 	//当你的golang程序在运行过程中消耗了超出你理解的内存时，你就需要搞明白，到底是 程序中哪些代码导致了这些内存消耗。
 	// 此时golang编译好的程序对你来说是个黑盒，该 如何搞清其中的内存使用呢？幸好golang已经内置了一些机制来帮助我们进行分析和追 踪。
 	//此时，通常我们可以采用golang的pprof来帮助我们分析golang进程的内存使用。
-	pprof  := beego.AppConfig.String("pprof.port")
-	if  pprof =="" {
+	pprof := beego.AppConfig.String("pprof.port")
+	if pprof == "" {
 		pprof = "8867"
 	}
 	go func() {
