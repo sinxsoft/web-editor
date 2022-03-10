@@ -2,16 +2,16 @@ package controllers
 
 import (
 	"fmt"
-	"strings"
-	"time"
-	"strconv"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils"
+	"github.com/dchest/captcha"
 	"github.com/satori/go.uuid"
 	"github.com/sinxsoft/web-editor/app/libs"
 	"github.com/sinxsoft/web-editor/app/models"
-	"github.com/dchest/captcha"
 	"io"
+	"strconv"
+	"strings"
+	"time"
 )
 
 const EachPageNum = 10
@@ -35,11 +35,10 @@ func (this *MainController) Index() {
 	this.display()
 }
 
-
 func (this *MainController) IndexPager() {
 
-	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain"){
-		io.WriteString(this.Ctx.ResponseWriter,"域名错误！")
+	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain") {
+		io.WriteString(this.Ctx.ResponseWriter, "域名错误！")
 		return
 	}
 
@@ -50,16 +49,15 @@ func (this *MainController) IndexPager() {
 
 	currPage := 1
 
-	if currentPage != ""{
-		currPage,_ = strconv.Atoi(currentPage)
+	if currentPage != "" {
+		currPage, _ = strconv.Atoi(currentPage)
 	}
 
-
 	//已经新建好的好的页面
-	entries := models.SearchContentList(EachPageNum,currPage,search)
+	entries := models.SearchContentList(EachPageNum, currPage, search)
 
 	this.Data["entries"] = entries
-	num:=models.GetContentRecordNum(search)
+	num := models.GetContentRecordNum(search)
 	res := libs.Paginator(currPage, EachPageNum, num)
 	this.Data["paginator"] = res
 	this.Data["totals"] = num
@@ -111,8 +109,8 @@ func (this *MainController) Login() {
 	fmt.Println(this.Ctx.Input.Domain())
 	fmt.Println(beego.AppConfig.String("back.domain"))
 
-	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain"){
-		io.WriteString(this.Ctx.ResponseWriter,"域名错误！")
+	if this.Ctx.Input.Domain() != beego.AppConfig.String("back.domain") {
+		io.WriteString(this.Ctx.ResponseWriter, "域名错误！")
 		return
 	}
 
@@ -138,7 +136,6 @@ func (this *MainController) Login() {
 		if username != "" && password != "" {
 			user, err := models.UserGetByName(username)
 
-
 			if err != nil || user.Password != libs.Md5([]byte(password+user.Salt)) {
 				errorMsg = "帐号或密码错误！"
 			} else if user.Status == -1 {
@@ -148,7 +145,7 @@ func (this *MainController) Login() {
 				user.LastLogin = time.Now().Unix()
 				models.UserUpdate(user)
 
-				uuid,_:=uuid.NewV1()
+				uuid := uuid.NewV1()
 				token := "webeditor-" + uuid.String()
 
 				userExt := models.GenUserExt()
