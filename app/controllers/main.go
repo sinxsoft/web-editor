@@ -6,12 +6,12 @@ import (
 	"github.com/astaxie/beego/utils"
 	"github.com/dchest/captcha"
 	"github.com/satori/go.uuid"
-	"github.com/sinxsoft/web-editor/app/libs"
-	"github.com/sinxsoft/web-editor/app/models"
 	"io"
 	"strconv"
 	"strings"
 	"time"
+	"web-editor/app/libs"
+	"web-editor/app/models"
 )
 
 const EachPageNum = 10

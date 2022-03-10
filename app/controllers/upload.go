@@ -14,9 +14,9 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/astaxie/beego"
 	"github.com/satori/go.uuid"
-	"github.com/sinxsoft/web-editor/app/libs"
-	"github.com/sinxsoft/web-editor/app/models"
 	"sync"
+	"web-editor/app/libs"
+	"web-editor/app/models"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/sinxsoft/web-editor/app/models"
+	"web-editor/app/models"
 )
 
 var (
@@ -68,7 +68,7 @@ func SaveObject(objectId string, data []byte, delaySecond int) error {
 
 func DelObject(objectId string) error {
 	client := CreateClient()
-	status := client.Del(OBJECT_KEY+objectId)
+	status := client.Del(OBJECT_KEY + objectId)
 	return status.Err()
 }
 
@@ -95,12 +95,12 @@ func GetObjectAndCollect(objectId string) ([]byte, error) {
 	bs, e := client.Get(OBJECT_KEY + objectId).Bytes()
 	if e == nil && bs != nil {
 		go func() {
-			result := client.Del(OBJECT_KEY+objectId)
+			result := client.Del(OBJECT_KEY + objectId)
 			if result.Err() != nil {
-				fmt.Println("collect data fail:" + OBJECT_KEY + objectId )
+				fmt.Println("collect data fail:" + OBJECT_KEY + objectId)
 			} else {
 
-				fmt.Println("collect data success:" + OBJECT_KEY + objectId )
+				fmt.Println("collect data success:" + OBJECT_KEY + objectId)
 			}
 		}()
 	}

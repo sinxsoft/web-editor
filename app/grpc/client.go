@@ -3,13 +3,10 @@ package grpc
 //client.go
 
 import (
-	"log"
-	"os"
-
-	pb "github.com/sinxsoft/web-editor/app/grpc"
-
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"log"
+	"os"
 	//pb "helloworld/helloworld"
 )
 
@@ -24,13 +21,13 @@ func main() {
 		log.Fatal("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	c := NewGreeterClient(conn)
 
 	name := defaultName
 	if len(os.Args) > 1 {
 		name = os.Args[1]
 	}
-	r, err := c.SayHello(context.Background(), &pb.HelloRequest{Name: name})
+	r, err := c.SayHello(context.Background(), &HelloRequest{Name: name})
 	if err != nil {
 		log.Fatal("could not greet: %v", err)
 	}

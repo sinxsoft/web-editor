@@ -11,7 +11,6 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
 	github.com/satori/go.uuid v1.2.0
-	github.com/sinxsoft/web-editor v0.0.0-20181012054852-dfbcbc954514
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
 	google.golang.org/grpc v1.45.0

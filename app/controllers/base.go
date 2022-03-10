@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego"
-	"github.com/sinxsoft/web-editor/app/libs"
-	"github.com/sinxsoft/web-editor/app/models"
 	"time"
+	"web-editor/app/libs"
+	"web-editor/app/models"
 )
 
 var (
@@ -100,7 +100,6 @@ func (this *BaseController) auth() {
 
 }
 
-
 // 1 success
 // 0 fail
 func JsonFormat(retcode int, retmsg string, retdata interface{}, stime time.Time) (json map[string]interface{}) {
@@ -122,7 +121,6 @@ func JsonFormat(retcode int, retmsg string, retdata interface{}, stime time.Time
 
 	return json
 }
-
 
 //渲染模版
 func (this *BaseController) display(tpl ...string) {

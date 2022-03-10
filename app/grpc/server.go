@@ -3,13 +3,10 @@ package grpc
 // server.go
 
 import (
-	"log"
-	"net"
-
-	pb "github.com/sinxsoft/web-editor/app/grpc"
-
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"log"
+	"net"
 	//pb "helloworld/helloworld"
 )
 
@@ -19,8 +16,8 @@ const (
 
 type server struct{}
 
-func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	return &pb.HelloReply{Message: "Hello " + in.Name}, nil
+func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
+	return &HelloReply{Message: "Hello " + in.Name}, nil
 }
 
 func main() {
@@ -29,6 +26,6 @@ func main() {
 		log.Fatal("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &server{})
+	RegisterGreeterServer(s, &server{})
 	s.Serve(lis)
 }

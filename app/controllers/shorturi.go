@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"github.com/sinxsoft/web-editor/app/models"
-	"strconv"
-	"github.com/sinxsoft/web-editor/app/libs"
-	"github.com/astaxie/beego"
 	"fmt"
+	"github.com/astaxie/beego"
 	"io"
+	"math/rand"
+	"strconv"
 	"strings"
 	"time"
-	"math/rand"
+	"web-editor/app/libs"
+	"web-editor/app/models"
 )
 
 const PRERIX = "SHORT_URI_"

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/dchest/captcha"
-	"github.com/sinxsoft/web-editor/app/controllers"
-	"github.com/sinxsoft/web-editor/app/libs"
-	"github.com/sinxsoft/web-editor/app/models"
 	"html/template"
 	"net/http"
 	_ "net/http/pprof"
 	"reflect"
 	"strings"
+	"web-editor/app/controllers"
+	"web-editor/app/libs"
+	"web-editor/app/models"
 )
 
 const VERSION = "1.0.0"
