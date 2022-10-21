@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
 	"fmt"
+	"github.com/astaxie/beego/orm"
 )
 
 type Content struct {
@@ -27,28 +27,27 @@ func GetContentRecordNum(search string) int64 {
 
 	o := orm.NewOrm()
 	qs := o.QueryTable(TableName("content"))
-	if search !=""{
-		qs=qs.Filter("Name",search)
+	if search != "" {
+		qs = qs.Filter("Name", search)
 	}
 	var cnt []Content
-	num, err :=  qs.All(&cnt)
+	num, err := qs.All(&cnt)
 	if err == nil {
 		return num
-	}else{
+	} else {
 		return 0
 	}
 }
 
-
 //总的content数量
-func SearchContentList(pageSize,pageNo int,search string) ([]Content) {
+func SearchContentList(pageSize, pageNo int, search string) []Content {
 	o := orm.NewOrm()
 	qs := o.QueryTable(TableName("content"))
-	if search !=""{
-		qs=qs.Filter("Name",search)
+	if search != "" {
+		qs = qs.Filter("Name", search)
 	}
 	var content []Content
-	cnt, err :=  qs.Limit(pageSize, (pageNo-1)*pageSize).All(&content)
+	cnt, err := qs.Limit(pageSize, (pageNo-1)*pageSize).All(&content)
 	if err == nil {
 		fmt.Println("count", cnt)
 	}
